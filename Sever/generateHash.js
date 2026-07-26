@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 
-const password = "123456"; // Your seller password
+const password = "Krishna@8018"; // Your seller password
 
 const generateHash = async () => {
   const hash = await bcrypt.hash(password, 10);
