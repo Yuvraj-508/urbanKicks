@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import {
   Package,
   ShoppingCart,
@@ -23,6 +24,7 @@ import {
 } from "@/components/ui/tooltip";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   const [stats, setStats] = useState({
@@ -75,24 +77,12 @@ export default function Dashboard() {
           </p>
         </div>
 
-   <TooltipProvider>
-  <Tooltip>
-    <TooltipTrigger asChild>
-      <span className="inline-block cursor-not-allowed">
-        <Button
-          disabled
-          className="bg-emerald-600 hover:bg-emerald-700 disabled:pointer-events-none disabled:opacity-60"
-        >
-          View Reports
-        </Button>
-      </span>
-    </TooltipTrigger>
-
-    <TooltipContent>
-      <p>Coming Soon 🚀</p>
-    </TooltipContent>
-  </Tooltip>
-</TooltipProvider>
+   <Button
+  onClick={() => navigate("/seller/products")}
+  className="bg-emerald-600 hover:bg-emerald-700"
+>
+  View Products
+</Button>
       </section>
 
       {/* Stats */}

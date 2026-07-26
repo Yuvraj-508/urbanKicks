@@ -17,73 +17,69 @@ export default function ImageUploader({
   const MIN_WIDTH = 600;
   const MIN_HEIGHT = 600;
 
+  const handleImageChange = async (e) => {
+    const files = Array.from(e.target.files);
 
-const handleImageChange = async (e) => {
-  const files = Array.from(e.target.files);
-
-  if (totalImages + files.length > MAX_IMAGES) {
-    toast.error(`Maximum ${MAX_IMAGES} images allowed`);
-    e.target.value = "";
-    return;
-  }
-
-  const validFiles = [];
-
-  for (const file of files) {
-    if (!file.type.startsWith("image/")) {
-      toast.error(`${file.name} is not a valid image`);
-      continue;
+    if (totalImages + files.length > MAX_IMAGES) {
+      toast.error(`Maximum ${MAX_IMAGES} images allowed`);
+      e.target.value = "";
+      return;
     }
 
-    if (file.size > MAX_SIZE) {
-      toast.error(`${file.name} exceeds the 5 MB limit`);
-      continue;
-    }
+    const validFiles = [];
 
-    try {
-      const dimensions = await new Promise((resolve, reject) => {
-        const img = new Image();
-        const imageUrl = URL.createObjectURL(file);
-
-        img.onload = () => {
-          URL.revokeObjectURL(imageUrl);
-
-          resolve({
-            width: img.width,
-            height: img.height,
-          });
-        };
-
-        img.onerror = () => {
-          URL.revokeObjectURL(imageUrl);
-          reject();
-        };
-
-        img.src = imageUrl;
-      });
-
-      if (
-        dimensions.width < MIN_WIDTH ||
-        dimensions.height < MIN_HEIGHT
-      ) {
-        toast.error(
-          `${file.name} must be at least ${MIN_WIDTH} × ${MIN_HEIGHT}px`
-        );
+    for (const file of files) {
+      if (!file.type.startsWith("image/")) {
+        toast.error(`${file.name} is not a valid image`);
         continue;
       }
 
-      validFiles.push(file);
-    } catch {
-      toast.error(`Failed to read ${file.name}`);
+      if (file.size > MAX_SIZE) {
+        toast.error(`${file.name} exceeds the 5 MB limit`);
+        continue;
+      }
+
+      try {
+        const dimensions = await new Promise((resolve, reject) => {
+          const img = new Image();
+          const imageUrl = URL.createObjectURL(file);
+
+          img.onload = () => {
+            URL.revokeObjectURL(imageUrl);
+
+            resolve({
+              width: img.width,
+              height: img.height,
+            });
+          };
+
+          img.onerror = () => {
+            URL.revokeObjectURL(imageUrl);
+            reject();
+          };
+
+          img.src = imageUrl;
+        });
+
+        if (dimensions.width < MIN_WIDTH || dimensions.height < MIN_HEIGHT) {
+          toast.error(
+            `${file.name} must be at least ${MIN_WIDTH} × ${MIN_HEIGHT}px`,
+          );
+          continue;
+        }
+
+        validFiles.push(file);
+      } catch {
+        toast.error(`Failed to read ${file.name}`);
+      }
     }
-  }
 
-  if (validFiles.length) {
-    setImages((prev) => [...prev, ...validFiles]);
-  }
+    if (validFiles.length) {
+      setImages((prev) => [...prev, ...validFiles]);
+    }
 
-  e.target.value = "";
-};
+    e.target.value = "";
+  };
 
   const removeExistingImage = (image) => {
     setDeletedImages((prev) => [...prev, image.public_id]);
@@ -159,7 +155,7 @@ const handleImageChange = async (e) => {
             <button
               type="button"
               onClick={() => removeExistingImage(image)}
-              className="absolute right-2 top-2 rounded-lg bg-red-500 p-1.5 text-white opacity-0 shadow transition-all group-hover:opacity-100"
+              className="absolute right-2 top-2 rounded-lg bg-red-500 p-1.5 text-white opacity-100 shadow transition-all sm:opacity-0 sm:group-hover:opacity-100"
             >
               <Trash2 className="h-4 w-4" />
             </button>
@@ -188,7 +184,7 @@ const handleImageChange = async (e) => {
             <button
               type="button"
               onClick={() => removeNewImage(index)}
-              className="absolute right-2 top-2 rounded-lg bg-red-500 p-1.5 text-white opacity-0 shadow transition-all group-hover:opacity-100"
+              className="absolute right-2 top-2 rounded-lg bg-red-500 p-1.5 text-white opacity-100 shadow transition-all sm:opacity-0 sm:group-hover:opacity-100"
             >
               <Trash2 className="h-4 w-4" />
             </button>
