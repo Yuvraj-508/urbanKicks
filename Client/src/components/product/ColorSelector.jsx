@@ -4,9 +4,7 @@ const colorOptions = [
   { name: "Grey", value: "#9CA3AF" },
   { name: "Blue", value: "#2563EB" },
   { name: "Red", value: "#DC2626" },
-  { name: "Green", value: "#16A34A" },
   { name: "Brown", value: "#92400E" },
-  { name: "Navy", value: "#1E3A8A" },
   { name: "Other", value: null },
 ];  import { useState } from "react";
 

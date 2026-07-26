@@ -136,157 +136,80 @@ export default function ProductForm({
       onSubmit={submitHandler}
       className="space-y-6"
     >
-      <fieldset
+     <fieldset
+  disabled={loading}
+  className={`space-y-6 transition-opacity duration-200 ${
+    loading ? "opacity-70" : "opacity-100"
+  }`}
+>
+  {/* Basic Information */}
+
+  <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    ...
+  </div>
+
+  {/* Pricing */}
+
+  <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    ...
+  </div>
+
+  {/* Sizes */}
+
+  <SizeSelector
+    value={formData.sizes}
+    onChange={(sizes) =>
+      setFormData((prev) => ({
+        ...prev,
+        sizes,
+      }))
+    }
+  />
+
+  {/* Colors */}
+
+  <ColorSelector
+    value={formData.colors}
+    onChange={(colors) =>
+      setFormData((prev) => ({
+        ...prev,
+        colors,
+      }))
+    }
+  />
+
+  {/* Images */}
+
+  <ImageUploader
+    existingImages={existingImages}
+    setExistingImages={setExistingImages}
+    deletedImages={deletedImages}
+    setDeletedImages={setDeletedImages}
+    images={images}
+    setImages={setImages}
+  />
+
+  {/* Footer */}
+
+  <div className="sticky bottom-0 flex justify-end rounded-xl border-t bg-white py-4">
+    <Button
+      type="submit"
       disabled={loading}
-      className={loading ? "pointer-events-none opacity-70" : ""}
+      className="min-w-44 bg-emerald-600 hover:bg-emerald-700"
     >
-
-      {/* Basic Information */}
-
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-slate-900">
-          Basic Information
-        </h2>
-
-        <div className="grid gap-4 lg:grid-cols-2">
-          <Input
-            name="name"
-            placeholder="Product Name"
-            value={formData.name}
-            onChange={handleChange}
-            className="h-11"
-          />
-
-          <Input
-            name="brand"
-            placeholder="Brand"
-            value={formData.brand}
-            onChange={handleChange}
-            className="h-11"
-          />
-
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className="h-11 rounded-xl border border-input bg-background px-3 text-sm outline-none focus:border-emerald-500"
-          >
-            <option value="">
-              Select Category
-            </option>
-
-            {categories.map((category) => (
-              <option
-                key={category}
-                value={category}
-              >
-                {category}
-              </option>
-            ))}
-          </select>
-
-          <Input
-            type="number"
-            name="stock"
-            placeholder="Stock Quantity"
-            value={formData.stock}
-            onChange={handleChange}
-            className="h-11"
-            min={0}
-          />
-        </div>
-
-        <Textarea
-          rows={4}
-          name="description"
-          placeholder="Product Description"
-          value={formData.description}
-          onChange={handleChange}
-          className="mt-4 resize-none"
-        />
-      </div>
-
-      {/* Pricing */}
-
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-slate-900">
-          Pricing
-        </h2>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <Input
-            type="number"
-            name="price"
-            placeholder="Original Price"
-            value={formData.price}
-            onChange={handleChange}
-            className="h-11"
-          />
-
-          <Input
-            type="number"
-            name="offerPrice"
-            placeholder="Selling Price"
-            value={formData.offerPrice}
-            onChange={handleChange}
-            className="h-11"
-          />
-        </div>
-      </div>
-
-      {/* Sizes */}
-
-      <SizeSelector
-        value={formData.sizes}
-        onChange={(sizes) =>
-          setFormData((prev) => ({
-            ...prev,
-            sizes,
-          }))
-        }
-      />
-
-      {/* Colors */}
-
-      <ColorSelector
-        value={formData.colors}
-        onChange={(colors) =>
-          setFormData((prev) => ({
-            ...prev,
-            colors,
-          }))
-        }
-      />
-
-      {/* Images */}
-
-      <ImageUploader
-        existingImages={existingImages}
-        setExistingImages={setExistingImages}
-        deletedImages={deletedImages}
-        setDeletedImages={setDeletedImages}
-        images={images}
-        setImages={setImages}
-      />
-
-      {/* Footer */}
-
-      <div className="sticky bottom-0 flex justify-end rounded-xl border-t bg-white py-4">
-        <Button
-          type="submit"
-          disabled={loading}
-          className="min-w-44 bg-emerald-600 hover:bg-emerald-700"
-        >
-          {loading
-            ? initialData?._id
-              ? "Updating..."
-              : "Creating..."
-            : initialData?._id
-              ? "Update Product"
-              : "Create Product"}
-        </Button>
-      </div>
-          </fieldset>
+      {loading ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          {initialData?._id ? "Updating..." : "Creating..."}
+        </>
+      ) : initialData?._id ? (
+        "Update Product"
+      ) : (
+        "Create Product"
+      )}
+    </Button>
+  </div>
+</fieldset>
     </form>
     </div>
   );
