@@ -32,7 +32,7 @@ export default function Products() {
 
   useEffect(() => {
     fetchProducts();
-  }, [products]);
+  }, []);
 
   const fetchProducts = async () => {
     try {
