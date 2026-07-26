@@ -201,7 +201,7 @@ export default function ProductRow({
       <td className="px-5 py-4">
         <div className="flex justify-center gap-1">
           <Button asChild size="icon" variant="ghost">
-            <Link to={`/seller/products/edit/${_id}`}>
+            <Link to={`/seller/products/${_id}`}>
               <Eye className="h-4 w-4" />
             </Link>
           </Button>

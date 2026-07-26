@@ -15,7 +15,7 @@ export default function ViewProduct() {
 
   useEffect(() => {
     fetchProduct();
-  }, []);
+  }, [id]);
 
   const fetchProduct = async () => {
     try {
@@ -144,19 +144,17 @@ export default function ViewProduct() {
 
               <Info
                 label="Status"
-                value={
-                  <Badge
-                    className={
-                      product.stock > 0
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-red-100 text-red-700"
-                    }
-                  >
-                    {product.stock > 0
-                      ? "In Stock"
-                      : "Out of Stock"}
-                  </Badge>
-                }
+              value={
+  <Badge
+    className={
+      product.inStock
+        ? "bg-emerald-100 text-emerald-700"
+        : "bg-red-100 text-red-700"
+    }
+  >
+    {product.inStock ? "In Stock" : "Out of Stock"}
+  </Badge>
+}
               />
             </div>
           </div>
@@ -191,21 +189,21 @@ export default function ViewProduct() {
             </h2>
 
             <div className="flex flex-wrap gap-3">
-              {product.colors?.map((color) => (
-                <div
-                  key={color}
-                  className="flex items-center gap-2 rounded-lg border px-3 py-2"
-                >
-                  <div
-                    className="h-5 w-5 rounded-full border"
-                    style={{
-                      backgroundColor: color,
-                    }}
-                  />
+            {product.colors?.map((color) => (
+  <div
+    key={color.name}
+    className="flex items-center gap-2 rounded-lg border px-3 py-2"
+  >
+    <div
+      className="h-5 w-5 rounded-full border"
+      style={{
+        backgroundColor: color.value,
+      }}
+    />
 
-                  <span>{color}</span>
-                </div>
-              ))}
+    <span>{color.name}</span>
+  </div>
+))}
             </div>
           </div>
         </div>
