@@ -9,6 +9,7 @@ import {
   AlertTriangle,
   TrendingUp,
   Clock3,
+  Loader2
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -56,9 +57,23 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex h-[500px] items-center justify-center">
-        <p className="text-slate-500">Loading dashboard...</p>
-      </div>
+   <div className="flex min-h-[500px] items-center justify-center rounded-2xl bg-white">
+  <div className="flex flex-col items-center gap-4">
+    <div className="rounded-full bg-emerald-50 p-5">
+      <Loader2 className="h-10 w-10 animate-spin text-emerald-600" />
+    </div>
+
+    <div className="text-center">
+      <h3 className="text-lg font-semibold text-slate-900">
+        Loading Dashboard...
+      </h3>
+
+      <p className="mt-1 text-sm text-slate-500">
+        Please wait while we prepare your dashboard.
+      </p>
+    </div>
+  </div>
+</div>
     );
   }
 

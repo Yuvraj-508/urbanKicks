@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import toast from "react-hot-toast";
+import { ArrowLeft } from "lucide-react";
 
 import ProductForm from "@/components/product/ProductForm";
 import {
@@ -111,36 +112,37 @@ export default function EditProduct() {
   }
 
   return (
-     <div className="space-y-6">
-    {/* Header */}
-    <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <button
-        type="button"
-        onClick={() => navigate("/seller/products")}
-        className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm transition hover:bg-slate-100"
-      >
-        <ArrowLeft className="h-5 w-5 text-slate-700" />
-      </button>
+<div className="space-y-6">
+  {/* Header */}
 
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-          Edit Product
-        </h1>
+  <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:gap-4 md:p-6">
+    <button
+      type="button"
+      onClick={() => navigate("/seller/products")}
+      className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:bg-slate-100 hover:shadow-md md:h-10 md:w-10 md:rounded-xl"
+    >
+      <ArrowLeft className="h-4 w-4 text-slate-700 md:h-5 md:w-5" />
+    </button>
 
-        <p className="mt-2 text-sm text-slate-500">
-          Update product details, pricing, stock, sizes, colors and images.
-        </p>
-      </div>
+    <div>
+      <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
+        Edit Product
+      </h1>
+
+      <p className="mt-1 text-sm text-slate-500">
+        Update product details, pricing, stock, sizes, colors and images.
+      </p>
     </div>
-
-    {/* Product Form */}
-
-    <ProductForm
-      initialData={product}
-      onSubmit={handleSubmit}
-      loading={saving}
-      isEdit={true}
-    />
   </div>
+
+  {/* Product Form */}
+
+  <ProductForm
+    initialData={product}
+    onSubmit={handleSubmit}
+    loading={saving}
+    isEdit={true}
+  />
+</div>
   );
 }

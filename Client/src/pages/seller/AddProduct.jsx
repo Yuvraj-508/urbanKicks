@@ -55,34 +55,34 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 p-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          onClick={() => navigate("/seller/products")}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm transition hover:bg-slate-100"
-        >
-          <ArrowLeft className="h-5 w-5 text-slate-700" />
-        </button>
+  <div className="mx-auto max-w-7xl space-y-8 p-4 md:p-6">
+    {/* Header */}
+ <div className="flex items-start gap-3 md:gap-4">
+  <button
+    type="button"
+    onClick={() => navigate("/seller/products")}
+    className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm transition-all hover:bg-slate-100 md:h-10 md:w-10 md:rounded-xl"
+  >
+    <ArrowLeft className="h-4 w-4 text-slate-700 md:h-5 md:w-5" />
+  </button>
 
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">
-            Add Product
-          </h1>
+  <div>
+    <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">
+      Add Product
+    </h1>
 
-          <p className="mt-2 text-slate-500">
-            Create a new product for your store.
-          </p>
-        </div>
-      </div>
+    <p className="mt-1 text-sm text-slate-500">
+      Create a new product for your store.
+    </p>
+  </div>
+</div>
 
-      {/* Product Form */}
-      <ProductForm
-        onSubmit={handleSubmit}
-        loading={loading}
-      />
-    </div>
-  );
+    {/* Product Form */}
+    <ProductForm
+      onSubmit={handleSubmit}
+      loading={loading}
+    />
+  </div>
+);
 
 }

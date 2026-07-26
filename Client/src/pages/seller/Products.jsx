@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { LayoutGrid, List, Plus, Search, Filter } from "lucide-react";
-
+import { Loader2 } from "lucide-react";
 import ProductCard from "@/components/product/ProductTable";
 import ProductSkeleton from "@/components/product/ProductSkeleton";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-
 import { getProducts, deleteProduct } from "@/services/product.service";
 
 export default function Products() {
@@ -28,7 +27,7 @@ export default function Products() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [deleteId, setDeleteId] = useState(null);
-const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -64,32 +63,27 @@ const [isDeleting, setIsDeleting] = useState(false);
     });
   }, [products, search]);
 
-const handleDelete = async () => {
-  if (!deleteId) return;
+  const handleDelete = async () => {
+    if (!deleteId) return;
 
-  try {
-    setIsDeleting(true);
+    try {
+      setIsDeleting(true);
 
-    await deleteProduct(deleteId);
+      await deleteProduct(deleteId);
 
-    toast.success("Product deleted successfully.");
+      toast.success("Product deleted successfully.");
 
-    setProducts((prev) =>
-      prev.filter((product) => product._id !== deleteId)
-    );
+      setProducts((prev) => prev.filter((product) => product._id !== deleteId));
 
-    setDeleteId(null);
-  } catch (error) {
-    console.error(error);
+      setDeleteId(null);
+    } catch (error) {
+      console.error(error);
 
-    toast.error(
-      error.response?.data?.message ||
-        "Failed to delete product."
-    );
-  } finally {
-    setIsDeleting(false);
-  }
-};
+      toast.error(error.response?.data?.message || "Failed to delete product.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -181,7 +175,25 @@ const handleDelete = async () => {
       {/* Loading */}
 
       {loading ? (
-        <ProductSkeleton />
+        <div className="flex min-h-[450px] items-center justify-center">
+          <div className="flex flex-col items-center gap-5">
+            <div className="relative">
+              <div className="h-16 w-16 rounded-full border-4 border-emerald-100"></div>
+
+              <Loader2 className="absolute inset-0 m-auto h-8 w-8 animate-spin text-emerald-600" />
+            </div>
+
+            <div className="text-center">
+              <p className="text-lg font-semibold text-slate-900">
+                Loading Products...
+              </p>
+
+              <p className="text-sm text-slate-500">
+                Fetching the latest inventory
+              </p>
+            </div>
+          </div>
+        </div>
       ) : filteredProducts.length === 0 ? (
         <div className="flex min-h-[350px] flex-col items-center justify-center rounded-2xl border border-dashed bg-white text-center">
           <div className="mb-4 text-6xl">📦</div>
@@ -201,45 +213,41 @@ const handleDelete = async () => {
           </Button>
         </div>
       ) : (
-<ProductCard
-  products={filteredProducts}
-  onDelete={(id) => setDeleteId(id)}
-/>      )}
+        <ProductCard
+          products={filteredProducts}
+          onDelete={(id) => setDeleteId(id)}
+        />
+      )}
 
-<AlertDialog
-      open={!!deleteId}
-      onOpenChange={(open) => {
-        if (!open) setDeleteId(null);
-      }}
-    >
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>
-            Delete Product?
-          </AlertDialogTitle>
+      <AlertDialog
+        open={!!deleteId}
+        onOpenChange={(open) => {
+          if (!open) setDeleteId(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Product?</AlertDialogTitle>
 
-          <AlertDialogDescription>
-            This action cannot be undone. The product will be
-            permanently deleted.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
+            <AlertDialogDescription>
+              This action cannot be undone. The product will be permanently
+              deleted.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>
-            Cancel
-          </AlertDialogCancel>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
 
-          <AlertDialogAction
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="bg-red-600 hover:bg-red-700"
-          >
-            {isDeleting ? "Deleting..." : "Delete Product"}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeleting ? "Deleting..." : "Delete Product"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
