@@ -18,7 +18,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-import { getProducts, deleteProduct } from "@/services/product.service";
+import { getProducts, deleteProduct, updateStock } from "@/services/product.service";
+import ProductTable from "@/components/product/ProductTable";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -84,6 +85,28 @@ export default function Products() {
       setIsDeleting(false);
     }
   };
+
+  const handleStockToggle = async (id, checked) => {
+  try {
+    await updateStock(id, checked);
+
+    toast.success(
+      checked
+        ? "Product marked as In Stock"
+        : "Product marked as Out of Stock"
+    );
+
+    fetchProducts();
+  } catch (error) {
+    console.error(error);
+
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to update stock."
+    );
+  }
+};
+
 
   return (
     <div className="space-y-6">
@@ -213,9 +236,11 @@ export default function Products() {
           </Button>
         </div>
       ) : (
-        <ProductCard
+        <ProductTable
           products={filteredProducts}
           onDelete={(id) => setDeleteId(id)}
+            onStockToggle={handleStockToggle}
+
         />
       )}
 

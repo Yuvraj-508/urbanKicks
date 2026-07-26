@@ -198,6 +198,8 @@ export const deleteProduct = async (req, res) => {
 };
 export const updateStock = async (req, res) => {
   try {
+    const { inStock } = req.body;
+
     const product = await Product.findById(req.params.id);
 
     if (!product) {
@@ -207,14 +209,14 @@ export const updateStock = async (req, res) => {
       });
     }
 
-    product.inStock = !product.inStock;
+    product.inStock = inStock;
 
     await product.save();
 
     return res.status(200).json({
       success: true,
       message: "Stock updated successfully.",
-      inStock: product.inStock,
+      product,
     });
   } catch (error) {
     console.log(error);

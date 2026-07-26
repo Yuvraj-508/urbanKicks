@@ -3,6 +3,7 @@ import ProductRow from "./ProductRow";
 export default function ProductTable({
   products,
   onDelete,
+  onStockToggle,
 }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -50,6 +51,8 @@ export default function ProductTable({
                 key={product._id}
                 product={product}
                 onDelete={onDelete}
+                onStockToggle={onStockToggle}
+
                 mobile={false}
               />
             ))}
@@ -65,6 +68,7 @@ export default function ProductTable({
             key={product._id}
             product={product}
             onDelete={onDelete}
+            onStockToggle={onStockToggle}
             mobile
           />
         ))}

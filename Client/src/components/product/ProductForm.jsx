@@ -71,6 +71,13 @@ export default function ProductForm({
   const submitHandler = (e) => {
     e.preventDefault();
 
+      window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+
+  
+
     if (!formData.name.trim()) {
       return toast.error("Product name is required.");
     }
@@ -118,16 +125,28 @@ export default function ProductForm({
 
   return (
     <div className="relative">
- {loading && (
-  <div className="absolute inset-0 z-50 flex items-center justify-center rounded-2xl bg-white/60 backdrop-blur-md">
-    <div className="flex flex-col items-center gap-3">
-      <Loader2 className="h-10 w-10 animate-spin text-emerald-600" />
+{loading && (
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/60 backdrop-blur-sm">
+    <div className="w-[300px] rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+      <div className="flex flex-col items-center">
+        <div className="relative flex h-16 w-16 items-center justify-center">
+          <div className="absolute h-16 w-16 animate-ping rounded-full bg-emerald-100 opacity-40"></div>
 
-      <p className="text-sm font-medium text-slate-700">
-        {initialData?._id
-          ? "Updating product..."
-          : "Creating product..."}
-      </p>
+          <div className="absolute h-16 w-16 animate-spin rounded-full border-[3px] border-slate-200 border-t-emerald-600"></div>
+
+          <Loader2 className="h-7 w-7 animate-spin text-emerald-600" />
+        </div>
+
+        <h3 className="mt-5 text-lg font-semibold text-slate-900">
+          {initialData?._id ? "Updating Product" : "Creating Product"}
+        </h3>
+
+        <p className="mt-2 text-center text-sm text-slate-500">
+          {initialData?._id
+            ? "Saving your changes..."
+            : "Uploading images and creating your product..."}
+        </p>
+      </div>
     </div>
   </div>
 )}

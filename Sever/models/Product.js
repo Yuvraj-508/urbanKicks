@@ -62,12 +62,24 @@ const productSchema = new mongoose.Schema(
       default: true,
     },
 
-    colors: [
-      {
-        type: String,
-        trim: true,
-      },
-    ],
+   colors: [
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+
+    value: {
+      type: String,
+      required: true,
+    },
+
+    custom: {
+      type: Boolean,
+      default: false,
+    },
+  },
+],
 
    sizes: {
   type: [String],

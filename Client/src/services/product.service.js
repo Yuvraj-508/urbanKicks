@@ -42,9 +42,10 @@ export const deleteProduct = async (id) => {
   return data;
 };
 
-export const toggleStock = async (id) => {
+export const updateStock = async (id, inStock) => {
   const { data } = await axiosInstance.patch(
-    `${API}/${id}/stock`
+    `/products/${id}/stock`,
+    { inStock }
   );
 
   return data;

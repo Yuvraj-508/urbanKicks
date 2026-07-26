@@ -5,18 +5,52 @@ const colorOptions = [
   { name: "Blue", value: "#2563EB" },
   { name: "Red", value: "#DC2626" },
   { name: "Brown", value: "#92400E" },
-  { name: "Other", value: null },
-];  import { useState } from "react";
+];
 
+import { useState } from "react";
 
 export default function ColorSelector({ value, onChange }) {
-const [customColor, setCustomColor] = useState("");
+  const [customHex, setCustomHex] = useState("#000000");
+  const [customColor, setCustomColor] = useState("");
   const toggleColor = (color) => {
-    if (value.includes(color.name)) {
-      onChange(value.filter((item) => item !== color.name));
+    const exists = value.some((item) => item.name === color.name);
+
+    if (exists) {
+      onChange(value.filter((item) => item.name !== color.name));
     } else {
-      onChange([...value, color.name]);
+      onChange([
+        ...value,
+        {
+          ...color,
+          custom: false,
+        },
+      ]);
     }
+  };
+
+  const addCustomColor = () => {
+    const name = customColor.trim();
+
+    if (!name) return;
+
+    const exists = value.some(
+      (item) => item.name.toLowerCase() === name.toLowerCase(),
+    );
+
+    if (exists) return;
+
+    onChange([
+      ...value,
+      {
+        name,
+        value: customHex,
+        custom: true,
+      },
+    ]);
+
+    setCustomColor("");
+
+    setCustomHex("#000000");
   };
 
   return (
@@ -36,105 +70,117 @@ const [customColor, setCustomColor] = useState("");
       {/* Colors */}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-       {colorOptions.map((color) => {
-  if (color.name === "Other") {
-    return (
-      <button
-        key="other"
-        type="button"
-        onClick={() => toggleColor(color)}
-        className={`rounded-xl border p-3 text-center transition-all ${
-          value.includes("Other")
-            ? "border-emerald-500 bg-emerald-50"
-            : "border-slate-200 hover:border-emerald-400 hover:bg-emerald-50"
-        }`}
-      >
-        <span className="text-sm font-medium">
-          + Other
-        </span>
-      </button>
-    );
-  }
+        {colorOptions.map((color) => {
 
-  const selected = value.includes(color.name);
+          const selected = value.some((item) => item.name === color.name);
+          return (
+            <button
+              key={color.name}
+              type="button"
+              onClick={() => toggleColor(color)}
+              className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${
+                selected
+                  ? "border-emerald-500 bg-emerald-50"
+                  : "border-slate-200 hover:border-emerald-400 hover:bg-emerald-50"
+              }`}
+            >
+              <span
+                className={`h-5 w-5 rounded-full ${
+                  color.name === "White" ? "border border-slate-300" : ""
+                }`}
+                style={{ backgroundColor: color.value }}
+              />
 
-  return (
-    <button
-      key={color.name}
-      type="button"
-      onClick={() => toggleColor(color)}
-      className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${
-        selected
-          ? "border-emerald-500 bg-emerald-50"
-          : "border-slate-200 hover:border-emerald-400 hover:bg-emerald-50"
-      }`}
-    >
-      <span
-        className={`h-5 w-5 rounded-full ${
-          color.name === "White"
-            ? "border border-slate-300"
-            : ""
-        }`}
-        style={{ backgroundColor: color.value }}
-      />
+              <span>{color.name}</span>
+            </button>
+          );
+        })}
+</div>
+        <div className="mt-6 rounded-xl border border-dashed border-slate-300 p-4">
+          <label className="mb-3 block text-sm font-medium text-slate-700">
+            Add Custom Color
+          </label>
 
-      <span>{color.name}</span>
-    </button>
-  );
-})}
+         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+  {/* Hidden Color Picker */}
+  <input
+    id="custom-color-picker"
+    type="color"
+    value={customHex}
+    onChange={(e) => setCustomHex(e.target.value)}
+    className="hidden"
+  />
 
-{value.includes("Other") && (
-  <div className="mt-4">
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Custom Color
-    </label>
+  {/* Color Preview */}
+  <label
+    htmlFor="custom-color-picker"
+    className="h-12 w-12 cursor-pointer rounded-full border-2 border-slate-300 shadow-sm transition hover:scale-105"
+    style={{ backgroundColor: customHex }}
+  />
 
-    <div className="flex gap-2">
-      <input
-        value={customColor}
-        onChange={(e) => setCustomColor(e.target.value)}
-        placeholder="e.g. Beige, Olive, Maroon"
-        className="flex-1 rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500"
-      />
+  {/* Color Name */}
+  <input
+    value={customColor}
+    onChange={(e) => setCustomColor(e.target.value)}
+    placeholder="e.g. Beige, Olive, Light Brown"
+    className="flex-1 rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-emerald-500"
+  />
 
-      <button
-        type="button"
-        onClick={() => {
-          const color = customColor.trim();
+  {/* Add Button */}
+  <button
+    type="button"
+    onClick={addCustomColor}
+    className="rounded-xl bg-emerald-600 px-6 py-3 font-medium text-white transition hover:bg-emerald-700"
+  >
+    Add
+  </button>
+</div>
+        </div>
 
-          if (!color) return;
-
-          if (!value.includes(color)) {
-            onChange(
-              value
-                .filter((c) => c !== "Other")
-                .concat(color)
-            );
-          }
-
-          setCustomColor("");
-        }}
-        className="rounded-xl bg-emerald-600 px-4 text-white hover:bg-emerald-700"
-      >
-        Add
-      </button>
-    </div>
-  </div>
-)}
-      </div>
 
       {/* Selected Colors */}
 
-      {value.length > 0 && (
-        <div className="mt-4 rounded-xl bg-slate-50 px-3 py-2">
-          <p className="text-sm text-slate-600">
-            Selected Colors:
-            <span className="ml-2 font-semibold text-slate-900">
-              {value.join(", ")}
-            </span>
-          </p>
+     {value.length > 0 && (
+  <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
+    <h3 className="mb-3 text-sm font-medium text-slate-700">
+      Selected Colors
+    </h3>
+
+    <div className="flex flex-wrap gap-2">
+      {value.map((color) => (
+        <div
+          key={color.name}
+          className="flex items-center gap-2 rounded-full bg-white px-3 py-2 shadow-sm"
+        >
+          <span
+            className="h-4 w-4 rounded-full border"
+            style={{
+              backgroundColor: color.value,
+            }}
+          />
+
+          <span className="text-sm font-medium">
+            {color.name}
+          </span>
+
+          <button
+            type="button"
+            onClick={() =>
+              onChange(
+                value.filter(
+                  (item) => item.name !== color.name
+                )
+              )
+            }
+            className="text-red-500 transition hover:text-red-700"
+          >
+            ✕
+          </button>
         </div>
-      )}
+      ))}
+    </div>
+  </div>
+)}
     </div>
   );
 }

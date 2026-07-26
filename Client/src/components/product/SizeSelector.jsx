@@ -3,7 +3,6 @@ import { useState } from "react";
 const shoeSizes = [6, 7, 8, 9, 10, 11];
 
 export default function SizeSelector({ value, onChange }) {
-  const [showCustomInput, setShowCustomInput] = useState(false);
   const [customSize, setCustomSize] = useState("");
 
   const toggleSize = (size) => {
@@ -14,18 +13,22 @@ export default function SizeSelector({ value, onChange }) {
     }
   };
 
-  const addCustomSize = () => {
-    const size = customSize.trim();
+ const addCustomSize = () => {
+  const size = customSize.trim();
 
-    if (!size) return;
+  if (!size) return;
 
-    if (!value.includes(size)) {
-      onChange([...value, size]);
-    }
+  const exists = value.some(
+    (item) =>
+      item.toString().toLowerCase() === size.toLowerCase()
+  );
 
-    setCustomSize("");
-    setShowCustomInput(false);
-  };
+  if (exists) return;
+
+  onChange([...value, size]);
+
+  setCustomSize("");
+};
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -63,55 +66,71 @@ export default function SizeSelector({ value, onChange }) {
           );
         })}
 
-        <button
-          type="button"
-          onClick={() => setShowCustomInput((prev) => !prev)}
-          className="flex h-11 items-center justify-center rounded-xl border border-dashed border-slate-300 px-4 text-sm font-semibold text-slate-600 transition hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-700"
-        >
-          + Other
-        </button>
+   
       </div>
 
       {/* Custom Size */}
 
-      {showCustomInput && (
-        <div className="mt-4 flex gap-2">
-          <input
-            type="text"
-            value={customSize}
-            onChange={(e) => setCustomSize(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                addCustomSize();
-              }
-            }}
-            placeholder="e.g. 11.5, 12, Free Size"
-            className="flex-1 rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-emerald-500"
-          />
+    <div className="mt-6 rounded-xl border border-dashed border-slate-300 p-4">
+  <label className="mb-3 block text-sm font-medium text-slate-700">
+    Add Custom Size
+  </label>
 
-          <button
-            type="button"
-            onClick={addCustomSize}
-            className="rounded-xl bg-emerald-600 px-5 text-white hover:bg-emerald-700"
-          >
-            Add
-          </button>
-        </div>
-      )}
+  <div className="flex flex-col gap-3 sm:flex-row">
+    <input
+      type="text"
+      value={customSize}
+      onChange={(e) => setCustomSize(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          addCustomSize();
+        }
+      }}
+      placeholder="e.g. 11.5, 12.5, Free Size"
+      className="flex-1 rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-emerald-500"
+    />
+
+    <button
+      type="button"
+      onClick={addCustomSize}
+      className="rounded-xl bg-emerald-600 px-6 py-3 font-medium text-white transition hover:bg-emerald-700"
+    >
+      Add
+    </button>
+  </div>
+</div>
 
       {/* Selected Sizes */}
 
-      {value.length > 0 && (
-        <div className="mt-4 rounded-xl bg-slate-50 px-3 py-2">
-          <p className="text-sm text-slate-600">
-            Selected Sizes:
-            <span className="ml-2 font-semibold text-slate-900">
-              {value.join(", ")}
-            </span>
-          </p>
+     {value.length > 0 && (
+  <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
+    <h3 className="mb-3 text-sm font-medium text-slate-700">
+      Selected Sizes
+    </h3>
+
+    <div className="flex flex-wrap gap-2">
+      {value.map((size) => (
+        <div
+          key={size}
+          className="flex items-center gap-2 rounded-full bg-white px-3 py-2 shadow-sm"
+        >
+          <span className="text-sm font-medium">{size}</span>
+
+          <button
+            type="button"
+            onClick={() =>
+              onChange(value.filter((item) => item !== size))
+            }
+            className="text-red-500 transition hover:text-red-700"
+          >
+            ✕
+          </button>
         </div>
-      )}
+      ))}
+    </div>
+  </div>
+)}
     </div>
   );
 }

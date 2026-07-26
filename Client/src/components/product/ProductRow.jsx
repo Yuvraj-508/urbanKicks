@@ -5,7 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 
-export default function ProductRow({ product, onDelete, mobile = false }) {
+export default function ProductRow({
+  product,
+  onDelete,
+  onStockToggle,
+  mobile = false,
+}) {
   const {
     _id,
     name,
@@ -14,6 +19,8 @@ export default function ProductRow({ product, onDelete, mobile = false }) {
     price,
     offerPrice,
     stock,
+    inStock,
+
     sizes = [],
     colors = [],
     images = [],
@@ -23,8 +30,6 @@ export default function ProductRow({ product, onDelete, mobile = false }) {
     images.length > 0
       ? images[0].url
       : "https://placehold.co/100x100?text=No+Image";
-
-  const inStock = stock > 0;
 
   // ================= MOBILE =================
 
@@ -67,15 +72,15 @@ export default function ProductRow({ product, onDelete, mobile = false }) {
           <div className="flex items-center gap-1">
             {colors.map((color) => (
               <span
-                key={color}
-                className="h-4 w-4 rounded-full border"
+                key={color.name}
+                className="h-4 w-4 rounded-full border border-slate-300"
                 style={{
-                  backgroundColor: color.toLowerCase(),
+                  backgroundColor: color.value,
                 }}
+                title={color.name}
               />
             ))}
           </div>
-
           <div className="flex items-center justify-between">
             <Badge variant={inStock ? "default" : "destructive"}>
               {inStock ? `Stock : ${stock}` : "Out of Stock"}
@@ -107,96 +112,92 @@ export default function ProductRow({ product, onDelete, mobile = false }) {
   // ================= DESKTOP =================
 
   return (
-    <tr className="border-b transition hover:bg-slate-50">
+    <tr
+      className={`border-b transition-all duration-300 ${
+        inStock ? "opacity-100 hover:bg-slate-50" : "opacity-55 bg-slate-50/70"
+      }`}
+    >
+      {" "}
       {/* Image */}
-
       <td className="px-5 py-4">
         <img
           src={image}
           alt={name}
-          className="h-16 w-16 rounded-xl border object-cover"
+          className={`h-16 w-16 rounded-xl border object-cover transition-all duration-300 ${
+            inStock ? "" : "grayscale opacity-60"
+          }`}
         />
       </td>
-
       {/* Product */}
-
       <td className="px-5 py-4">
-        <h3 className="font-semibold text-slate-900">{name}</h3>
-
+        <h3
+          className={`font-semibold transition-colors ${
+            inStock ? "text-slate-900" : "text-slate-500"
+          }`}
+        >
+          {name}
+        </h3>
         <p className="text-sm text-slate-500">{brand}</p>
 
         <p className="text-xs text-slate-400">{category}</p>
       </td>
-
       {/* Price */}
-
       <td className="px-5 py-4">
-        <div className="font-semibold">₹{offerPrice || price}</div>
-
+        <div className={`font-semibold ${inStock ? "" : "text-slate-400"}`}>
+          ₹{offerPrice || price}
+        </div>
         {offerPrice && (
           <div className="text-sm text-slate-400 line-through">₹{price}</div>
         )}
       </td>
-
       {/* Sizes */}
-
       <td className="px-5 py-4">
         <div className="flex flex-wrap gap-1">
           {sizes.map((size) => (
-            <Badge key={size} variant="secondary">
+            <Badge variant="secondary" className={!inStock ? "opacity-60" : ""}>
               {size}
             </Badge>
           ))}
         </div>
       </td>
-
       {/* Colors */}
-
       <td className="px-5 py-4">
         <div className="flex gap-2">
           {colors.map((color) => (
             <span
-              key={color}
-              className="h-5 w-5 rounded-full border"
+              key={color.name}
+              className={`h-5 w-5 rounded-full border transition-all ${
+                !inStock ? "opacity-40 grayscale" : ""
+              }`}
               style={{
-                backgroundColor: color.toLowerCase(),
+                backgroundColor: color.value,
               }}
             />
           ))}
         </div>
       </td>
-
       {/* Qty */}
-
       <td className="px-5 py-4 text-center font-semibold">{stock}</td>
-
       {/* Status */}
-
       <td className="px-5 py-4">
         <div className="flex items-center justify-center gap-3">
           <Badge
-            className={
+            className={`transition-all ${
               inStock
                 ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
                 : "bg-red-100 text-red-700 hover:bg-red-100"
-            }
+            }`}
           >
             {inStock ? "In Stock" : "Out of Stock"}
           </Badge>
 
           <Switch
             checked={inStock}
-            onCheckedChange={(checked) => {
-              console.log("Update Stock Status:", checked);
-
-              // API call will go here
-            }}
+            onCheckedChange={(checked) => onStockToggle(product._id, checked)}
           />
         </div>
       </td>
-
       {/* Actions */}
-
       <td className="px-5 py-4">
         <div className="flex justify-center gap-1">
           <Button asChild size="icon" variant="ghost">
@@ -211,13 +212,13 @@ export default function ProductRow({ product, onDelete, mobile = false }) {
             </Link>
           </Button>
 
-         <Button
-  variant="ghost"
-  size="icon"
-  onClick={() => onDelete(product._id)}
->
-  <Trash2 className="h-4 w-4 text-red-600" />
-</Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onDelete(product._id)}
+          >
+            <Trash2 className="h-4 w-4 text-red-600" />
+          </Button>
         </div>
       </td>
     </tr>
