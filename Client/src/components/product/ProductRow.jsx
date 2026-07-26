@@ -35,24 +35,40 @@ export default function ProductRow({
 
   if (mobile) {
     return (
-      <div className="flex gap-4 p-4">
+      <div
+        className={`flex gap-4 p-4 transition-all duration-300 ${
+          inStock ? "opacity-100" : "opacity-60 bg-slate-50"
+        }`}
+      >
         <img
           src={image}
           alt={name}
-          className="h-24 w-24 rounded-xl border object-cover"
+          className={`h-24 w-24 rounded-xl border object-cover transition-all duration-300 ${
+            inStock ? "" : "grayscale opacity-70"
+          }`}
         />
 
         <div className="flex-1 space-y-2">
           <div>
-            <h3 className="font-semibold">{name}</h3>
-
+            <h3
+              className={`font-semibold ${
+                inStock ? "text-slate-900" : "text-slate-500"
+              }`}
+            >
+              {name}
+            </h3>
             <p className="text-sm text-slate-500">
               {brand} • {category}
             </p>
           </div>
 
           <div className="flex items-center gap-3 text-sm">
-            <span className="font-semibold text-emerald-600">
+            <span
+              className={`font-semibold ${
+                inStock ? "text-emerald-600" : "text-slate-400"
+              }`}
+            >
+              {" "}
               ₹{offerPrice || price}
             </span>
 
@@ -63,7 +79,12 @@ export default function ProductRow({
 
           <div className="flex flex-wrap gap-1">
             {sizes.map((size) => (
-              <Badge key={size} variant="secondary">
+              <Badge
+                key={size}
+                variant="secondary"
+                className={!inStock ? "opacity-60" : ""}
+              >
+                {" "}
                 {size}
               </Badge>
             ))}
@@ -73,7 +94,9 @@ export default function ProductRow({
             {colors.map((color) => (
               <span
                 key={color.name}
-                className="h-4 w-4 rounded-full border border-slate-300"
+                className={`h-4 w-4 rounded-full border border-slate-300 ${
+                  !inStock ? "opacity-40 grayscale" : ""
+                }`}
                 style={{
                   backgroundColor: color.value,
                 }}
