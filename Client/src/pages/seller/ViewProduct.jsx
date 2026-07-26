@@ -95,6 +95,7 @@ export default function ViewProduct() {
           <div className="grid grid-cols-2 gap-4">
             {product.images?.map((image) => (
               <img
+                loading="lazy"
                 key={image.public_id}
                 src={image.url}
                 alt={product.name}

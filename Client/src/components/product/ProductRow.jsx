@@ -146,6 +146,7 @@ export default function ProductRow({
         <img
           src={image}
           alt={name}
+          loading="lazy"
           className={`h-16 w-16 rounded-xl border object-cover transition-all duration-300 ${
             inStock ? "" : "grayscale opacity-60"
           }`}
