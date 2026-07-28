@@ -45,33 +45,43 @@ export default function ProductTable({
             </tr>
           </thead>
 
-          <tbody>
-            {products.map((product) => (
-              <ProductRow
-                key={product._id}
-                product={product}
-                onDelete={onDelete}
-                onStockToggle={onStockToggle}
-
-                mobile={false}
-              />
-            ))}
-          </tbody>
+         <tbody>
+  {products.length === 0 ? (
+    <tr>
+      <td
+        colSpan={8}
+        className="py-10 text-center text-slate-500"
+      >
+        No products found.
+      </td>
+    </tr>
+  ) : (
+    products.map((product) => (
+      <ProductRow
+        key={product._id}
+        product={product}
+        onDelete={onDelete}
+        onStockToggle={onStockToggle}
+        mobile={false}
+      />
+    ))
+  )}
+</tbody>
         </table>
       </div>
 
       {/* Mobile */}
 
       <div className="divide-y lg:hidden">
-        {products.map((product) => (
-          <ProductRow
-            key={product._id}
-            product={product}
-            onDelete={onDelete}
-            onStockToggle={onStockToggle}
-            mobile
-          />
-        ))}
+        {products.map((product, index) => (
+  <ProductRow
+    key={product._id}
+    product={product}
+    onDelete={onDelete}
+    onStockToggle={onStockToggle}
+    mobile
+  />
+))}
       </div>
     </div>
   );

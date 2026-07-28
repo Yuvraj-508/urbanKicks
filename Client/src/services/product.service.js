@@ -2,8 +2,15 @@ import axiosInstance from "@/lib/axios";
 
 const API = "/products";
 
-export const getProducts = async (params = {}) => {
-  const { data } = await axiosInstance.get(API, { params });
+export const getProducts = async (
+  page = 1,
+  limit = 10,
+  search = ""
+) => {
+  const { data } = await axiosInstance.get(
+    `/products?page=${page}&limit=${limit}&search=${search}`
+  );
+
   return data;
 };
 

@@ -178,10 +178,14 @@ export default function ProductRow({
       <td className="px-5 py-4">
         <div className="flex flex-wrap gap-1">
           {sizes.map((size) => (
-            <Badge variant="secondary" className={!inStock ? "opacity-60" : ""}>
-              {size}
-            </Badge>
-          ))}
+  <Badge
+    key={size}
+    variant="secondary"
+    className={!inStock ? "opacity-60" : ""}
+  >
+    {size}
+  </Badge>
+))}
         </div>
       </td>
       {/* Colors */}

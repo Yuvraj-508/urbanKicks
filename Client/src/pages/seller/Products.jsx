@@ -18,95 +18,100 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-import { getProducts, deleteProduct, updateStock } from "@/services/product.service";
+import {
+  getProducts,
+  deleteProduct,
+  updateStock,
+} from "@/services/product.service";
 import ProductTable from "@/components/product/ProductTable";
 
 export default function Products() {
   const navigate = useNavigate();
 
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [deleteId, setDeleteId] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+const [products, setProducts] = useState([]);
+const [loading, setLoading] = useState(true);
+const [search, setSearch] = useState("");
+const [deleteId, setDeleteId] = useState(null);
+const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+const [currentPage, setCurrentPage] = useState(1);
+const [totalPages, setTotalPages] = useState(1);
+const [totalProducts, setTotalProducts] = useState(0);
 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
+useEffect(() => {
+  fetchProducts(currentPage);
+}, [currentPage, search]);
 
-      const response = await getProducts();
-
-      setProducts(response.products || []);
-    } catch (error) {
-      console.error(error);
-
-      toast.error(error.response?.data?.message || "Failed to load products.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filteredProducts = useMemo(() => {
-    if (!search.trim()) return products;
-
-    const keyword = search.toLowerCase();
-
-    return products.filter((product) => {
-      return (
-        product.name?.toLowerCase().includes(keyword) ||
-        product.brand?.toLowerCase().includes(keyword) ||
-        product.category?.toLowerCase().includes(keyword)
-      );
-    });
-  }, [products, search]);
-
-  const handleDelete = async () => {
-    if (!deleteId) return;
-
-    try {
-      setIsDeleting(true);
-
-      await deleteProduct(deleteId);
-
-      toast.success("Product deleted successfully.");
-
-      setProducts((prev) => prev.filter((product) => product._id !== deleteId));
-
-      setDeleteId(null);
-    } catch (error) {
-      console.error(error);
-
-      toast.error(error.response?.data?.message || "Failed to delete product.");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  const handleStockToggle = async (id, checked) => {
+const fetchProducts = async (page = 1) => {
   try {
-    await updateStock(id, checked);
+    setLoading(true);
 
-    toast.success(
-      checked
-        ? "Product marked as In Stock"
-        : "Product marked as Out of Stock"
-    );
+const response = await getProducts(currentPage, 10, search);
 
-    fetchProducts();
+   setProducts(response.products);
+setTotalPages(response.totalPages);
+setTotalProducts(response.totalProducts);
   } catch (error) {
     console.error(error);
 
     toast.error(
-      error.response?.data?.message ||
-        "Failed to update stock."
+      error.response?.data?.message || "Failed to load products."
     );
+  } finally {
+    setLoading(false);
   }
 };
 
+
+const handleDelete = async () => {
+  if (!deleteId) return;
+
+  try {
+    setIsDeleting(true);
+
+    await deleteProduct(deleteId);
+
+    toast.success("Product deleted successfully.");
+
+    // If the last product on the page was deleted,
+    // move to the previous page (if possible)
+    if (products.length === 1 && currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    } else {
+      fetchProducts(currentPage);
+    }
+
+    setDeleteId(null);
+  } catch (error) {
+    console.error(error);
+
+    toast.error(
+      error.response?.data?.message || "Failed to delete product."
+    );
+  } finally {
+    setIsDeleting(false);
+  }
+};
+
+  const handleStockToggle = async (id, checked) => {
+    try {
+      await updateStock(id, checked);
+
+      toast.success(
+        checked
+          ? "Product marked as In Stock"
+          : "Product marked as Out of Stock",
+      );
+
+      fetchProducts();
+    } catch (error) {
+      console.error(error);
+
+      toast.error(error.response?.data?.message || "Failed to update stock.");
+    }
+  };
+
+  
 
   return (
     <div className="space-y-6">
@@ -143,7 +148,10 @@ export default function Products() {
 
             <Input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
               placeholder="Search products..."
               className="pl-10"
             />
@@ -187,7 +195,7 @@ export default function Products() {
           <p>
             Total Products{" "}
             <span className="font-semibold text-slate-900">
-              {filteredProducts.length}
+            {totalProducts}
             </span>
           </p>
 
@@ -217,7 +225,7 @@ export default function Products() {
             </div>
           </div>
         </div>
-      ) : filteredProducts.length === 0 ? (
+      ) : products.length === 0? (
         <div className="flex min-h-[350px] flex-col items-center justify-center rounded-2xl border border-dashed bg-white text-center">
           <div className="mb-4 text-6xl">📦</div>
 
@@ -237,11 +245,43 @@ export default function Products() {
         </div>
       ) : (
         <ProductTable
-          products={filteredProducts}
+         products={products}
           onDelete={(id) => setDeleteId(id)}
-            onStockToggle={handleStockToggle}
-
+          onStockToggle={handleStockToggle}
         />
+      )}
+
+      {totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-between">
+          <Button
+            variant="outline"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+          >
+            Previous
+          </Button>
+
+          <div className="flex gap-2">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index}
+                size="icon"
+                variant={currentPage === index + 1 ? "default" : "outline"}
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </div>
+
+          <Button
+            variant="outline"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+          >
+            Next
+          </Button>
+        </div>
       )}
 
       <AlertDialog
