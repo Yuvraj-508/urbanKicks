@@ -21,7 +21,7 @@ export default function Hero() {
         <div className="absolute bottom-32 left-1/3 h-2 w-2 rounded-full bg-emerald-500" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-center px-5 lg:pt-25 pt-10 pb-16 lg:min-h-screen lg:flex-row lg:items-center lg:justify-between">
+      <div className="relative mx-auto flex sm:min-h-[92vh] max-w-7xl flex-col justify-center px-5 lg:pt-25 pt-10 sm:pb-10 pb-5 lg:min-h-screen lg:flex-row lg:items-center lg:justify-between">
         {/* LEFT */}
 
         <motion.div
@@ -31,7 +31,7 @@ export default function Hero() {
           className="mx-auto max-w-xl text-center lg:mx-0 lg:text-left"
         >
           <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold tracking-wide text-emerald-700 shadow-sm">
-            🔥 NEW COLLECTION 2026
+            🔥 BEST COLLECTION 2026
           </span>
 
           <h1 className="mt-8 text-[44px] font-black leading-[0.95] tracking-tight text-slate-900 sm:text-6xl lg:text-8xl">
@@ -41,11 +41,11 @@ export default function Hero() {
             </span>
           </h1>
 
-          <p className="mx-auto mt-7 max-w-lg text-base leading-8 text-slate-600 sm:text-lg lg:mx-0">
-            Discover premium sneakers crafted for athletes, creators, and
-            everyday explorers. Designed with modern comfort, bold aesthetics,
-            and performance that keeps up with every step.
-          </p>
+          <p className="mx-auto mt-5 max-w-lg text-sm leading-6 text-slate-600 sm:mt-7 sm:text-base sm:leading-7 lg:mx-0 lg:text-lg lg:leading-8">
+  Discover premium sneakers crafted for athletes, creators, and
+  everyday explorers. Designed with modern comfort, bold aesthetics,
+  and performance that keeps up with every step.
+</p>
 
           {/* Buttons */}
 
@@ -87,7 +87,7 @@ export default function Hero() {
 
               <h4 className="mt-3 font-bold">4.9 Rating</h4>
 
-              <p className="text-sm text-slate-500">Trusted worldwide</p>
+              <p className="text-sm text-slate-500">Trusted Platform</p>
             </div>
 
             <div className="rounded-2xl border bg-white p-4 shadow-sm">

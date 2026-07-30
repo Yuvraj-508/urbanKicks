@@ -18,7 +18,7 @@ useEffect(() => {
 
       {/* Main Image */}
 
-      <div className="flex h-[330px] lg:h-[470px] items-center justify-center overflow-hidden rounded-2xl border bg-slate-50 p-4">
+      <div className="flex h-[350px] lg:h-[470px] items-center justify-center overflow-hidden rounded-2xl border bg-slate-50 p-4">
 
         <img
           src={selectedImage}

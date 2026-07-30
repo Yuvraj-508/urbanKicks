@@ -74,6 +74,7 @@ const navItems = [
 ];
 
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeMega, setActiveMega] = useState(null);
 
@@ -125,8 +126,7 @@ export default function Navbar() {
         <div className="mx-auto h-full max-w-7xl px-5">
           <div className="flex h-full items-center justify-between lg:hidden">
             {/* Left - Menu */}
-            <Sheet>
-              <SheetTrigger asChild>
+<Sheet open={open} onOpenChange={setOpen}>              <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Menu className="h-6 w-6" />
                 </Button>
@@ -142,29 +142,31 @@ export default function Navbar() {
                 </div>
 
                 <div className="space-y-6 p-6">
-                  {navItems.map((item) => (
-                    <div key={item.name}>
-                      <Link to={item.path} className="block text-lg font-bold">
-                        {item.name}
-                      </Link>
+                {navItems.map((item) =>
+  item.comingSoon ? (
+    <div
+      key={item.name}
+      className="flex items-center justify-between rounded-lg px-3 py-2 opacity-60"
+    >
+      <span className="text-lg font-bold text-slate-500">
+        {item.name}
+      </span>
 
-                      {item.mega && (
-                        <div className="ml-4 mt-3 space-y-2">
-                          {item.columns.flatMap((column) =>
-                            column.links.map((link) => (
-                              <Link
-                                key={link.path}
-                                to={link.path}
-                                className="block text-sm text-slate-600 transition hover:text-emerald-600"
-                              >
-                                {link.name}
-                              </Link>
-                            )),
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+      <span className="rounded-full bg-amber-100 px-2 py-1 text-[10px] font-semibold text-amber-700">
+        Coming Soon
+      </span>
+    </div>
+  ) : (
+    <Link
+      key={item.name}
+      to={item.path}
+      onClick={() => setOpen(false)}
+      className="block rounded-lg px-3 py-2 text-lg font-bold transition hover:bg-slate-100"
+    >
+      {item.name}
+    </Link>
+  )
+)}
                 </div>
               </SheetContent>
             </Sheet>

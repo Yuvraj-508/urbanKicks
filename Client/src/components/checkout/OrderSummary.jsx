@@ -10,7 +10,7 @@ import ButtonLoader from "../loading/ButtonLoader";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 
-export default function OrderSummary({ address }) {
+export default function OrderSummary({ address, delivery, payment }) {
   const Navigate = useNavigate();
   const [orderId, setOrderId] = useState("");
   const [open, setOpen] = useState(false);
@@ -28,7 +28,7 @@ export default function OrderSummary({ address }) {
     return `UK-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
   };
 
-  const shipping = subtotal >= 999 ? 0 : 99;
+  const shipping = delivery === "express" ? 199 : subtotal >= 999 ? 0 : 99;
 
   const total = Math.max(subtotal + shipping - discount, 0);
 
@@ -37,10 +37,10 @@ export default function OrderSummary({ address }) {
 
     if (code === "SAVE100") {
       setDiscount(100);
-    } else if (code === "SAVE500" && subtotal >= 5000) {
+    } else if (code === "SAVE500" && subtotal >= 7000) {
       setDiscount(500);
     } else {
-      alert("Invalid Coupon");
+      toast.error("Invalid Coupon");
       setDiscount(0);
     }
   };
@@ -65,6 +65,13 @@ ${address.city},
 ${address.state} - ${address.pincode}`,
     );
 
+    formData.append(
+      "Delivery Method",
+      delivery === "express"
+        ? "Express (1–2 Business Days)"
+        : "Standard (3–5 Business Days)",
+    );
+
     formData.append("Subtotal", `₹${subtotal}`);
 
     formData.append("Shipping", shipping === 0 ? "Free" : `₹${shipping}`);
@@ -72,6 +79,15 @@ ${address.state} - ${address.pincode}`,
     formData.append("Discount", `₹${discount}`);
 
     formData.append("Total", `₹${total}`);
+
+    formData.append(
+      "Payment Method",
+      payment === "cod"
+        ? "Cash on Delivery (₹200 Advance Required)"
+        : payment === "upi"
+          ? "UPI"
+          : "Card",
+    );
 
     formData.append(
       "Products",
@@ -226,6 +242,18 @@ Price : ₹${item.product.offerPrice ?? item.product.price}
               <span>{shipping === 0 ? "Free" : `₹${shipping}`}</span>
             </div>
 
+            <div className="flex justify-between">
+              <span className="text-slate-600">Payment</span>
+
+              <span className="capitalize">
+                {payment === "cod"
+                  ? "Cash on Delivery"
+                  : payment === "upi"
+                    ? "UPI"
+                    : "Card"}
+              </span>
+            </div>
+
             <div className="flex justify-between text-emerald-600">
               <span>Discount</span>
 
@@ -263,7 +291,18 @@ Price : ₹${item.product.offerPrice ?? item.product.price}
             <span>Easy 7-Day Returns</span>
           </div>
         </div>
+        {payment === "cod" && (
+          <div className="my-4 rounded-xl border border-amber-200 bg-amber-50 p-3">
+            <p className="text-sm font-semibold text-amber-800">
+              ₹200 advance payment is required for Cash on Delivery.
+            </p>
 
+            <p className="mt-1 text-xs text-amber-700">
+              This advance will be adjusted in your final bill at the time of
+              delivery.
+            </p>
+          </div>
+        )}
         <Button
           className="h-11 w-full rounded-xl bg-emerald-600 text-sm font-semibold hover:bg-emerald-700"
           disabled={cartItems.length === 0 || loading}
@@ -275,6 +314,10 @@ Price : ₹${item.product.offerPrice ?? item.product.price}
             <>Place Order • ₹{total.toLocaleString("en-IN")}</>
           )}
         </Button>
+        <p className="mb-3 mt-3 rounded-lg bg-blue-50 p-3 text-xs leading-5 text-blue-700">
+          We'll contact you on WhatsApp to confirm your order and share payment
+          details !
+        </p>
       </div>
       <OrderSuccessDialog
         open={open}

@@ -7,11 +7,11 @@ import PaymentMethod from "./PaymentMethods";
 export default function CheckoutForm({
   address,
   setAddress,
+  delivery,
+  setDelivery,
+   payment,
+  setPayment,
 }) {
-
-  const [delivery, setDelivery] = useState("standard");
-
-  const [payment, setPayment] = useState("cod");
 
   return (
     <div className="space-y-3">

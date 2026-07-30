@@ -18,7 +18,7 @@ export default function Fotter() {
   return (
     <footer className="mt-2 border-t bg-slate-950 text-slate-300">
       <div className="mx-auto max-w-7xl px-5 py-16">
-        <div className="grid grid-cols-2 gap-10 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-20 sm:gap-10 lg:grid-cols-5">
           {/* Brand */}
 
           <div className="lg:col-span-2">

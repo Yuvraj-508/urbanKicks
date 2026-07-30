@@ -3,7 +3,61 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { motion } from "framer-motion";
 
+import { useEffect, useState } from "react";
+
 export default function FlashSale() {
+  const SALE_END = new Date("2026-08-15T23:59:59").getTime();
+
+const getTimeLeft = () => {
+  const difference = SALE_END - Date.now();
+
+  if (difference <= 0) {
+    return {
+      days: "00",
+      hours: "00",
+      minutes: "00",
+      seconds: "00",
+      expired: true,
+    };
+  }
+
+  const days = Math.floor(
+    difference / (1000 * 60 * 60 * 24)
+  );
+
+  const hours = Math.floor(
+    (difference % (1000 * 60 * 60 * 24)) /
+      (1000 * 60 * 60)
+  );
+
+  const minutes = Math.floor(
+    (difference % (1000 * 60 * 60)) /
+      (1000 * 60)
+  );
+
+  const seconds = Math.floor(
+    (difference % (1000 * 60)) / 1000
+  );
+
+  return {
+    days: String(days).padStart(2, "0"),
+    hours: String(hours).padStart(2, "0"),
+    minutes: String(minutes).padStart(2, "0"),
+    seconds: String(seconds).padStart(2, "0"),
+    expired: false,
+  };
+};
+
+const [timeLeft, setTimeLeft] = useState(getTimeLeft());
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    setTimeLeft(getTimeLeft());
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, []);
+
   return (
     <section className="px-5 lg:py-10 py-5">
       <motion.div
@@ -73,49 +127,54 @@ export default function FlashSale() {
 
           {/* Right */}
 
-          <div className="grid grid-cols-3 gap-3">
+         <div className="grid grid-cols-4 gap-3">
 
-            <div className="rounded-2xl bg-white/10 p-5 text-center backdrop-blur">
+  <div className="rounded-2xl bg-white/10 p-5 text-center backdrop-blur">
+    <p className="text-3xl font-black">
+      {timeLeft.days}
+    </p>
 
-              <p className="text-3xl font-black">
-                12
-              </p>
+    <span className="text-sm text-slate-300">
+      Days
+    </span>
+  </div>
 
-              <span className="text-sm text-slate-300">
-                Hours
-              </span>
+  <div className="rounded-2xl bg-white/10 p-5 text-center backdrop-blur">
+    <p className="text-3xl font-black">
+      {timeLeft.hours}
+    </p>
 
-            </div>
+    <span className="text-sm text-slate-300">
+      Hours
+    </span>
+  </div>
 
-            <div className="rounded-2xl bg-white/10 p-5 text-center backdrop-blur">
+  <div className="rounded-2xl bg-white/10 p-5 text-center backdrop-blur">
+    <p className="text-3xl font-black">
+      {timeLeft.minutes}
+    </p>
 
-              <p className="text-3xl font-black">
-                45
-              </p>
+    <span className="text-sm text-slate-300">
+      Minutes
+    </span>
+  </div>
 
-              <span className="text-sm text-slate-300">
-                Minutes
-              </span>
+  <div className="rounded-2xl bg-white/10 p-5 text-center backdrop-blur">
+    <p className="text-3xl font-black">
+      {timeLeft.seconds}
+    </p>
 
-            </div>
+    <span className="text-sm text-slate-300">
+      Seconds
+    </span>
+  </div>
 
-            <div className="rounded-2xl bg-white/10 p-5 text-center backdrop-blur">
-
-              <p className="text-3xl font-black">
-                29
-              </p>
-
-              <span className="text-sm text-slate-300">
-                Seconds
-              </span>
-
-            </div>
-
-          </div>
+</div>
 
         </div>
 
       </motion.div>
     </section>
   );
+
 }
