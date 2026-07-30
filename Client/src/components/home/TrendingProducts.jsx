@@ -56,7 +56,7 @@ useEffect(() => {
             Trending Products
           </h2>
 
-          <p className="mx-auto mt-4 max-w-2xl text-slate-500">
+          <p className="mx-auto hidden sm:flex mt-4 max-w-2xl text-slate-500">
             Discover our latest arrivals and customer-favorite sneakers,
             designed for comfort, performance, and everyday style.
           </p>
@@ -80,7 +80,7 @@ useEffect(() => {
   {loadingMessage}
 </h3>
 
-      <p className="mt-2 max-w-md text-center text-slate-500">
+      <p className="mt-2  max-w-md text-center text-slate-500">
         Our server is waking up and loading the latest collection.
         This usually takes a few seconds on your first visit.
       </p>
