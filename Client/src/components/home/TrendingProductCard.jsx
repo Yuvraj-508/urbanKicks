@@ -41,8 +41,12 @@ export default function TrendingProductCard({ product }) {
     "/placeholder.png";
 
   return (
-    <motion.article
-      whileHover={{ y: -8 }}
+   <motion.article
+  whileHover={
+    window.matchMedia("(hover: hover)").matches
+      ? { y: -8 }
+      : {}
+  }
       transition={{ duration: 0.25 }}
       className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-2xl"
     >
@@ -85,8 +89,7 @@ export default function TrendingProductCard({ product }) {
 
         {/* Quick View */}
 
-        <div className="absolute inset-x-0 bottom-5 flex justify-center opacity-0 transition duration-300 group-hover:opacity-100">
-          <Button
+<div className="absolute inset-x-3 bottom-3 hidden justify-center lg:flex opacity-0 transition duration-300 group-hover:opacity-100">          <Button
             variant="secondary"
             className="rounded-full shadow-lg"
             asChild
@@ -102,14 +105,14 @@ export default function TrendingProductCard({ product }) {
 
       {/* Content */}
 
-      <div className="space-y-4 p-5">
+      <div className="space-y-4 p-4 sm:p-5">
         <div>
           <p className="text-sm font-medium text-slate-500">
             {brand}
           </p>
 
           <Link to={`/products/${_id}`}>
-            <h3 className="mt-1 line-clamp-2 text-lg font-bold text-slate-900 transition hover:text-emerald-600">
+            <h3 className="mt-1 line-clamp-2 text-base sm:text-lg font-bold text-slate-900 transition hover:text-emerald-600">
               {name}
             </h3>
           </Link>
@@ -141,7 +144,7 @@ export default function TrendingProductCard({ product }) {
         <div className="flex items-end justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-black text-slate-900">
+              <span className="text-xl sm:text-2xlfont-black text-slate-900">
                 ₹{sellingPrice.toLocaleString("en-IN")}
               </span>
 
@@ -169,7 +172,7 @@ export default function TrendingProductCard({ product }) {
    <Button
   asChild
   disabled={!inStock}
-  className="h-12 w-full rounded-full bg-slate-900 text-white transition-all duration-300 hover:bg-emerald-600 disabled:bg-slate-300"
+  className="h-11 sm:h-12 w-full rounded-full bg-slate-900 text-white transition-all duration-300 hover:bg-emerald-600 disabled:bg-slate-300"
 >
   <Link
     to={`/products/${_id}`}

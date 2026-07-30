@@ -49,7 +49,7 @@ export default function WhyChooseUs() {
             WHY CHOOSE US
           </p>
 
-          <h2 className="mt-4 text-4xl font-black text-slate-900 lg:text-5xl">
+          <h2 className="mt-4 text-3xl  sm:text-4xl font-black text-slate-900 lg:text-5xl">
             Premium Experience,
             <br />
             Every Step of the Way
@@ -97,7 +97,7 @@ export default function WhyChooseUs() {
       </motion.div>
 
       {/* Title */}
-      <h3 className="relative mt-5 text-lg sm:text-xl font-bold text-slate-900">
+      <h3 className="relative mt-5 text-sm sm:text-xl font-bold text-slate-900">
         {feature.title}
       </h3>
 
