@@ -70,6 +70,9 @@ const navItems = [
   {
     name: "Sale",
     path: "/products?sale=true",
+     mega: false,
+    comingSoon: true,
+
   },
 ];
 

@@ -25,7 +25,7 @@ export default function Home() {
     <>
       <Hero />
       <TrendingProducts />
-      <FlashSale />
+      {/* <FlashSale /> */}
      <section id="categories">
   <Categories />
 </section>
