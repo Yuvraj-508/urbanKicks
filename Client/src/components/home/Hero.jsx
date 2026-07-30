@@ -118,7 +118,7 @@ lg:text-8xl font-black leading-[0.95] tracking-tight text-slate-900 ">
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="relative mt-14 flex flex-1 justify-center lg:mt-0"
+          className="relative mt-5 flex flex-1 justify-center lg:mt-0"
         >
           <motion.div
             animate={{
