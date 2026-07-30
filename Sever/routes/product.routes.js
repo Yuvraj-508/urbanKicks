@@ -9,6 +9,7 @@ import {
   deleteProduct,
   getProductById,
   updateProduct,
+  getRelatedProducts,
 } from "../controlllers/product.controller.js";
 
 // import authSeller from "../middleware/authSeller.js";
@@ -23,6 +24,7 @@ router.post(
 );
 
 router.get("/", getProducts);
+     router.get("/related/:id", getRelatedProducts);
 
 router.get("/:id", getProductById);
 
@@ -40,5 +42,6 @@ router.delete("/:id",
 router.patch("/:id/stock", 
     // authSeller,
      updateStock);
+
 
 export default router;

@@ -7,11 +7,12 @@ import otpRouter from "./routes/otpRoute.js";
 import ProductRouter from "./routes/product.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import authRoutes from "./routes/auth.routes.js"; 
+import cartRoutes from "./routes/cart.routes.js";
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Connect Database
-connectDB();
+await connectDB();
 
 // Middleware
 app.use(express.json());
@@ -48,6 +49,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", otpRouter);
 app.use("/api/products", ProductRouter);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/cart", cartRoutes);
 
 app.use("/api/auth", authRoutes);
 

@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 
-  // "http://localhost:4000/api",
-   "https://urbankicks-backend-eowi.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
+  timeout: 15000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,8 +12,8 @@ const axiosInstance = axios.create({
 // Request Interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Example:
-    // const token = localStorage.getItem("token");
+    // Future:
+    // const token = authStore.getState().token;
     // if (token) {
     //   config.headers.Authorization = `Bearer ${token}`;
     // }
@@ -28,22 +27,15 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized user
-      console.error("Unauthorized");
-      // localStorage.removeItem("token");
-      // window.location.href = "/login";
-    }
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Something went wrong";
 
-    if (error.response?.status === 403) {
-      console.error("Forbidden");
-    }
-
-    if (error.response?.status >= 500) {
-      console.error("Server Error");
-    }
-
-    return Promise.reject(error);
+    return Promise.reject({
+      ...error,
+      message,
+    });
   }
 );
 

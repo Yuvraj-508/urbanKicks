@@ -39,23 +39,28 @@ const [totalPages, setTotalPages] = useState(1);
 const [totalProducts, setTotalProducts] = useState(0);
 
 useEffect(() => {
-  fetchProducts(currentPage);
-}, [currentPage, search]);
+  fetchProducts();
+}, [currentPage, search]);;
 
-const fetchProducts = async (page = 1) => {
+const fetchProducts = async () => {
   try {
     setLoading(true);
 
-const response = await getProducts(currentPage, 10, search);
+    const response = await getProducts({
+      page: currentPage,
+      limit: 10,
+      search,
+    });
 
-   setProducts(response.products);
-setTotalPages(response.totalPages);
-setTotalProducts(response.totalProducts);
+    setProducts(response.products);
+    setTotalPages(response.totalPages);
+    setTotalProducts(response.totalProducts);
   } catch (error) {
     console.error(error);
 
     toast.error(
-      error.response?.data?.message || "Failed to load products."
+      error.response?.data?.message ||
+        "Failed to load products."
     );
   } finally {
     setLoading(false);
@@ -78,7 +83,7 @@ const handleDelete = async () => {
     if (products.length === 1 && currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
     } else {
-      fetchProducts(currentPage);
+      fetchProducts();
     }
 
     setDeleteId(null);

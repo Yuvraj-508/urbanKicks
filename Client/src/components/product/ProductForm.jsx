@@ -59,14 +59,17 @@ export default function ProductForm({
     setImages([]);
   }, [initialData]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  setFormData((prev) => ({
+    ...prev,
+    [name]:
+      name === "category"
+        ? value.toLowerCase()
+        : value,
+  }));
+};
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -196,7 +199,7 @@ export default function ProductForm({
         {categories.map((category) => (
           <option
             key={category}
-            value={category}
+            value={category.toLowerCase()}
           >
             {category}
           </option>

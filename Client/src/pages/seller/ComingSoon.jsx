@@ -3,12 +3,26 @@ import { Link } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
+import { useLocation, useNavigate } from "react-router";
 export default function ComingSoon({
   title,
   description,
   icon: Icon,
 }) {
+
+const navigate = useNavigate();
+const location = useLocation();
+
+const handleBack = () => {
+  if (location.pathname.startsWith("/seller")) {
+    navigate("/seller");
+  } else if (window.history.length > 1) {
+    navigate(-1);
+  } else {
+    navigate("/");
+  }
+};
+
   return (
     <div className="flex min-h-[calc(100vh-120px)] items-center justify-center px-6">
       <div className="w-full max-w-2xl rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">
@@ -43,12 +57,13 @@ export default function ComingSoon({
           </p>
         </div>
 
-        <Link to="/seller">
-          <Button className="mt-10 rounded-xl bg-emerald-600 px-8 hover:bg-emerald-700">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
-        </Link>
+      <Button
+  onClick={handleBack}
+  className="mt-10 rounded-xl bg-emerald-600 px-8 hover:bg-emerald-700"
+>
+  <ArrowLeft className="mr-2 size-4" />
+  Back
+</Button>
       </div>
     </div>
   );

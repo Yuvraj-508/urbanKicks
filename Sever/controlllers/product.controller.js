@@ -123,45 +123,133 @@ export const addProduct = async (req, res) => {
 };
 
 export const getProducts = async (req, res) => {
+  console.log(req.query);
+  console.log(await Product.find({ category: "Sneakers" }));
   try {
-    const { page = 1, limit = 10, search = "", category } = req.query;
+    const {
+      page = 1,
+      limit = 12,
+      search = "",
+      category,
+      brand,
+      sort = "newest",
+      minPrice,
+      maxPrice,
+      inStock,
+      size,
+      color,
+    } = req.query;
+
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
 
     const filter = {};
 
-    // Search by product name
+    // Search
     if (search) {
-      filter.name = {
-        $regex: search,
-        $options: "i",
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { brand: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // Category
+    if (category) {
+      filter.category = {
+        $in: category.split(","),
       };
     }
 
-    // Category Filter
-    if (category) {
-      filter.category = category;
+    // Brand
+    if (brand) {
+      filter.brand = {
+        $in: brand.split(","),
+      };
     }
 
-    const products = await Product.find(filter)
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit))
-      .select("-__v");
+    // Stock
+    if (inStock === "true") {
+      filter.inStock = true;
+    }
 
-    const totalProducts = await Product.countDocuments(filter);
+    // Size
+    if (size) {
+      filter.sizes = {
+        $in: size.split(","),
+      };
+    }
+
+    // Color
+    if (color) {
+      filter["colors.name"] = {
+        $in: color.split(","),
+      };
+    }
+
+    // Price
+    if (minPrice || maxPrice) {
+      filter.offerPrice = {};
+
+      if (minPrice) {
+        filter.offerPrice.$gte = Number(minPrice);
+      }
+
+      if (maxPrice) {
+        filter.offerPrice.$lte = Number(maxPrice);
+      }
+    }
+
+    // Sorting
+    let sortOption = {};
+
+    switch (sort) {
+      case "price-low":
+        sortOption = { offerPrice: 1 };
+        break;
+
+      case "price-high":
+        sortOption = { offerPrice: -1 };
+        break;
+
+      case "name-asc":
+        sortOption = { name: 1 };
+        break;
+
+      case "name-desc":
+        sortOption = { name: -1 };
+        break;
+
+      default:
+        sortOption = { createdAt: -1 };
+    }
+
+    const [products, totalProducts] = await Promise.all([
+      Product.find(filter)
+        .select(
+          "name brand category price offerPrice images stock inStock sizes colors createdAt"
+        )
+        .sort(sortOption)
+        .skip((pageNumber - 1) * limitNumber)
+        .limit(limitNumber)
+        .lean(),
+
+      Product.countDocuments(filter),
+    ]);
 
     return res.status(200).json({
       success: true,
-      totalProducts,
-      totalPages: Math.ceil(totalProducts / limit),
-      currentPage: Number(page),
       products,
+      totalProducts,
+      totalPages: Math.ceil(totalProducts / limitNumber),
+      currentPage: pageNumber,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.error("Get Products Error:", err);
 
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch products.",
+      message: "Failed to fetch products",
     });
   }
 };
@@ -344,6 +432,47 @@ export const updateProduct = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to update product.",
+    });
+  }
+};
+
+export const getRelatedProducts = async (req, res) => {
+
+  try {
+
+    const { id } = req.params;
+    const { limit = 4 } = req.query;
+
+    // Find current product
+    const currentProduct = await Product.findById(id);
+
+    if (!currentProduct) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    // Find related products
+    const products = await Product.find({
+      _id: { $ne: id }, // Exclude current product
+      category: currentProduct.category,
+      inStock: true,
+    })
+      .sort({ createdAt: -1 })
+      .limit(Number(limit))
+      .select("-__v");
+
+    return res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch related products.",
     });
   }
 };

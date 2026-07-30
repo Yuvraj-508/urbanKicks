@@ -1,30 +1,38 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
-import MainBanner from '../components/Hero'
-import NewArrival from '../components/NewArrival'
-import Categories from '../components/Categories'
-import Faq from '../components/Faq'
-import Reviews from '../components/Reviews'
-import Newsletter from '../components/Newsletter'
-import Fotter from '../components/Fotter'
-import Hero from '../components/Hero'
+import { useEffect } from "react";
 
-function Home() {
+import Hero from "@/components/home/Hero";
+import FlashSale from "@/components/home/FlashSale";
+import Categories from "@/components/home/Categories";
+import TrendingProducts from "@/components/home/TrendingProducts";
+import FeaturedCollection from "@/components/home/FeaturedCollection";
+import WhyChooseUs from "@/components/home/WhyChooseUs";
+import CustomerReviews from "@/components/home/CustomerReviews";
+import Newsletter from "@/components/home/Newsletter";
+
+import useProductStore from "@/store/productStore";
+
+export default function Home() {
+  const initialized = useProductStore((state) => state.initialized);
+  const fetchProducts = useProductStore((state) => state.fetchProducts);
+
+  useEffect(() => {
+    if (!initialized) {
+      fetchProducts();
+    }
+  }, [initialized, fetchProducts]);
+
   return (
-    <div>
-        {/* <Navbar/> */}
-        <Hero/>
-        <Categories/>
-        <NewArrival/>
-       <Reviews/>
-              <Faq/>
-        <Newsletter/>
-        {/* <Fotter/> */}
-  
-    
-
-    </div>
-  )
+    <>
+      <Hero />
+      <TrendingProducts />
+      <FlashSale />
+     <section id="categories">
+  <Categories />
+</section>
+      {/* <FeaturedCollection /> */}
+      <WhyChooseUs />
+      <CustomerReviews />
+      <Newsletter  />
+    </>
+  );
 }
-
-export default Home
