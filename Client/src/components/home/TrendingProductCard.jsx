@@ -83,7 +83,7 @@ sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text
 
         <motion.button
           whileTap={{ scale: 0.9 }}
-          className="absolute right-4 top-4 rounded-full bg-white p-2 shadow-lg transition hover:bg-emerald-50"
+          className="absolute hidden right-4 top-4 rounded-full bg-white p-2 shadow-lg transition hover:bg-emerald-50"
         >
           <Heart className="h-5 w-5" />
         </motion.button>
