@@ -73,7 +73,7 @@ sm:left-4 sm:top-4 rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-whit
         {/* New */}
 
         {isNew && (
-          <span className="absolute left-3 top-12
+          <span className=" hidden md:flex absolute left-3 top-12
 sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-lg">
             NEW
           </span>
