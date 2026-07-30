@@ -43,7 +43,7 @@ lg:text-8xl font-black leading-[0.95] tracking-tight text-slate-900 ">
             </span>
           </h1>
 
-          <p className="mx-auto mt-5 max-w-lg text-sm leading-6 text-slate-600 sm:mt-7 sm:text-base sm:leading-7 lg:mx-0 lg:text-lg lg:leading-8">
+          <p className="mx-auto hidden mt-5 max-w-lg text-sm leading-6 text-slate-600 sm:mt-7 sm:text-base sm:leading-7 lg:mx-0 lg:text-lg lg:leading-8">
   Discover premium sneakers crafted for athletes, creators, and
   everyday explorers. Designed with modern comfort, bold aesthetics,
   and performance that keeps up with every step.
