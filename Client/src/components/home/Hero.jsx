@@ -21,9 +21,7 @@ export default function Hero() {
         <div className="absolute bottom-32 left-1/3 h-2 w-2 rounded-full bg-emerald-500" />
       </div>
 
-      <div className="relative mx-auto flex sm:min-h-[92vh] max-w-7xl flex-col justify-center px-4
-sm:px-5
-lg:px-8 lg:pt-25 pt-10 sm:pb-10 pb-5 lg:min-h-screen lg:flex-row lg:items-center lg:justify-between">
+<div className="relative mx-auto flex max-w-7xl flex-col-reverse items-center justify-center gap-10 px-4 pt-10 pb-8 sm:min-h-[90vh] sm:px-6 sm:pb-12 lg:min-h-screen lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:pt-24">
         {/* LEFT */}
 
         <motion.div
@@ -53,16 +51,16 @@ lg:text-8xl font-black leading-[0.95] tracking-tight text-slate-900 ">
 
           {/* Buttons */}
 
-<div className="mt-10 flex items-center justify-center sm:justify-start gap-4  ">
+<div className="mt-10 flex w-full items-center justify-center gap-3 md:justify-start">
   {/* Shop Now */}
   <Button
     asChild
     size="lg"
-    className="group h-14 rounded-full bg-emerald-600 px-8 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:bg-emerald-700 hover:shadow-xl sm:w-auto"
+    className="group h-14 flex-1 rounded-full bg-emerald-600 px-4 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:bg-emerald-700 hover:shadow-xl sm:flex-none sm:px-8"
   >
     <Link
       to="/all-products"
-      className="flex h-full items-center justify-center"
+      className="flex h-full w-full items-center justify-center"
     >
       <span>Shop Now</span>
       <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -74,11 +72,11 @@ lg:text-8xl font-black leading-[0.95] tracking-tight text-slate-900 ">
     asChild
     size="lg"
     variant="outline"
-    className="group h-14  rounded-full border-slate-300 px-8 text-base font-semibold transition-all duration-300 hover:border-emerald-600 hover:bg-emerald-50 hover:text-emerald-600 sm:w-auto"
+    className="group h-14 flex-1 rounded-full border-slate-300 px-4 text-base font-semibold transition-all duration-300 hover:border-emerald-600 hover:bg-emerald-50 hover:text-emerald-600 sm:flex-none sm:px-8"
   >
     <Link
       to="/all-products"
-      className="flex h-full  items-center justify-center"
+      className="flex h-full w-full items-center justify-center"
     >
       <span>Explore Collection</span>
     </Link>
@@ -141,8 +139,7 @@ lg:text-8xl font-black leading-[0.95] tracking-tight text-slate-900 ">
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              className="relative z-10 w-full max-w-[780px] drop-shadow-[0_70px_90px_rgba(0,0,0,0.35)]"
-            />
+className="relative z-10 mx-auto w-full max-w-[320px] sm:max-w-[450px] md:max-w-[550px] lg:max-w-[720px] xl:max-w-[780px] drop-shadow-[0_40px_60px_rgba(0,0,0,0.30)]"            />
 
             {/* Floating Price Card */}
             <motion.div
@@ -174,7 +171,7 @@ lg:text-8xl font-black leading-[0.95] tracking-tight text-slate-900 ">
                 <p className="text-sm text-slate-500">Happy Customers</p>
 
                 <h3 className="mt-1 text-3xl font-black text-slate-900">
-                  18K+
+                  1K+
                 </h3>
               </div>
             </motion.div>
