@@ -2,27 +2,28 @@ import { motion } from "framer-motion";
 import { ChevronRight, Package2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export default function ProductHero({products}) {
+export default function ProductHero() {
   return (
     <section className="relative overflow-hidden border-b bg-gradient-to-b from-slate-50 via-white to-slate-100">
       {/* Background Glow */}
 
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-emerald-300/20 blur-[130px]" />
+        <div className="absolute left-1/2 top-h-[300px] w-[300px]
+sm:h-[420px] sm:w-[420px] -translate-x-1/2 rounded-full bg-emerald-300/20 blur-[130px]" />
 
         <div className="absolute -left-20 top-24 h-72 w-72 rounded-full bg-blue-200/15 blur-[120px]" />
 
         <div className="absolute -right-20 bottom-0 h-72 w-72 rounded-full bg-emerald-200/20 blur-[120px]" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-5 py-5 lg:py-8">
+      <div className="relative mx-auto max-w-7xl px-5 py-6 sm:py-8 lg:py-10">
         {/* Breadcrumb */}
 
         <motion.div
-          initial={{ opacity: 0, y: -15 }}
+          initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="flex items-center gap-2 text-sm text-slate-500"
+          className="flex flex-wrap items-cemter gap-2 text-sm text-slate-500"
         >
           <Link to="/" className="transition hover:text-emerald-600">
             Home
@@ -56,8 +57,6 @@ export default function ProductHero({products}) {
             <p className="mt-5 hidden lg:flex max-w-[480px] text-base leading-8 text-slate-600"> Explore our latest collection of premium sneakers designed for comfort, performance, and everyday style. </p>
 
           </div>
-
-
 
   
         </motion.div>
