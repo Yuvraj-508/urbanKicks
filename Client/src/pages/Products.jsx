@@ -62,7 +62,6 @@ export default function Products() {
             setView={setView}
             totalProducts={pagination.totalProducts}
           />
-
           <div className="mt-8">
             {loading ? (
               <PageLoader

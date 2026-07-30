@@ -40,6 +40,15 @@ app.use(
   })
 );
 
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Urban Kicks API is running",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
 // Test Route
 app.get("/", (req, res) => {
   res.send("🚀 Server Running");

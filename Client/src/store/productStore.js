@@ -86,48 +86,51 @@ const useProductStore = create((set, get) => ({
   // Product List
   // ===========================
 
-  fetchProducts: async () => {
-    const {
+ fetchProducts: async () => {
+  const {
+    page,
+    limit,
+    search,
+    sort,
+    filters,
+  } = get();
+
+  set({
+    loading: true,
+    error: null,
+  });
+
+  try {
+    const res = await getProducts({
       page,
       limit,
       search,
       sort,
       filters,
-    } = get();
-
-    set({
-      loading: true,
-      error: null,
     });
 
-    try {
-      const res = await getProducts({
-        page,
-        limit,
-        search,
-        sort,
-        filters,
-      });
-
-   set({
-  products: res.products,
-  pagination: {
-    page: res.currentPage,
-    totalPages: res.totalPages,
-    totalProducts: res.totalProducts,
-    hasNextPage: res.currentPage < res.totalPages,
-    hasPrevPage: res.currentPage > 1,
-  },
-  loading: false,
-  initialized: true,
-});
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.message,
-      });
-    }
-  },
+    set({
+      products: res.products,
+      pagination: {
+        page: res.currentPage,
+        totalPages: res.totalPages,
+        totalProducts: res.totalProducts,
+        hasNextPage: res.currentPage < res.totalPages,
+        hasPrevPage: res.currentPage > 1,
+      },
+      loading: false,
+      initialized: true,
+    });
+  } catch (error) {
+    set({
+      loading: false,
+      error:
+        error.response?.data?.message ||
+        error.message ||
+        "Unable to load products.",
+    });
+  }
+},
 
   // ===========================
   // Single Product

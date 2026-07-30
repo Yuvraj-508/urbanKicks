@@ -50,6 +50,7 @@ const buildParams = ({
   return params;
 };
 
+
 export const getProducts = async (options = {}) => {
   const { data } = await axiosInstance.get(API, {
     params: buildParams(options),
