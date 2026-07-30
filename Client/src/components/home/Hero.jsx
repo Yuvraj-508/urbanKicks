@@ -53,34 +53,37 @@ lg:text-8xl font-black leading-[0.95] tracking-tight text-slate-900 ">
 
           {/* Buttons */}
 
-<div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-start">            <Button 
-              asChild
-              size="lg"
-              className="h-14  rounded-full bg-emerald-600 px-8 text-base font-semibold shadow-lg transition hover:bg-emerald-700 sm:w-auto"
-            >
-              <Link
-                to="/all-products"
-                className="flex items-center justify-center"
-              >
-                Shop Now
-                <ArrowRight className="ml-2 size-5" />
-              </Link>
-            </Button>
+<div className="mt-10 flex items-center justify-center sm:justify-start gap-4  ">
+  {/* Shop Now */}
+  <Button
+    asChild
+    size="lg"
+    className="group h-14 rounded-full bg-emerald-600 px-8 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:bg-emerald-700 hover:shadow-xl sm:w-auto"
+  >
+    <Link
+      to="/all-products"
+      className="flex h-full items-center justify-center"
+    >
+      <span>Shop Now</span>
+      <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+    </Link>
+  </Button>
 
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="w-full sm:w-auto h-14  border-slate-300 px-8 text-base "
-            >
-              <Link
-                to="/all-products"
-                className="flex items-center justify-center"
-              >
-                Explore Collection
-              </Link>
-            </Button>
-          </div>
+  {/* Explore Collection */}
+  <Button
+    asChild
+    size="lg"
+    variant="outline"
+    className="group h-14  rounded-full border-slate-300 px-8 text-base font-semibold transition-all duration-300 hover:border-emerald-600 hover:bg-emerald-50 hover:text-emerald-600 sm:w-auto"
+  >
+    <Link
+      to="/all-products"
+      className="flex h-full  items-center justify-center"
+    >
+      <span>Explore Collection</span>
+    </Link>
+  </Button>
+</div>
 
           {/* Feature Cards */}
 

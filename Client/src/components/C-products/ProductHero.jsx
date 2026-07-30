@@ -8,8 +8,10 @@ export default function ProductHero() {
       {/* Background Glow */}
 
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-h-[300px] w-[300px]
-sm:h-[420px] sm:w-[420px] -translate-x-1/2 rounded-full bg-emerald-300/20 blur-[130px]" />
+        <div
+          className="absolute left-1/2 top-h-[300px] w-[300px]
+sm:h-[420px] sm:w-[420px] -translate-x-1/2 rounded-full bg-emerald-300/20 blur-[130px]"
+        />
 
         <div className="absolute -left-20 top-24 h-72 w-72 rounded-full bg-blue-200/15 blur-[120px]" />
 
@@ -54,11 +56,12 @@ sm:h-[420px] sm:w-[420px] -translate-x-1/2 rounded-full bg-emerald-300/20 blur-[
               Premium Sneakers
             </h1>
 
-            <p className="mt-5 hidden lg:flex max-w-[480px] text-base leading-8 text-slate-600"> Explore our latest collection of premium sneakers designed for comfort, performance, and everyday style. </p>
-
+            <p className="mt-5 hidden lg:flex max-w-[480px] text-base leading-8 text-slate-600">
+              {" "}
+              Explore our latest collection of premium sneakers designed for
+              comfort, performance, and everyday style.{" "}
+            </p>
           </div>
-
-  
         </motion.div>
       </div>
     </section>
