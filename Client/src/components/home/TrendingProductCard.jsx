@@ -172,7 +172,7 @@ export default function TrendingProductCard({ product }) {
    <Button
   asChild
   disabled={!inStock}
-  className="h-11 sm:h-12 w-full rounded-full bg-slate-900 text-white transition-all duration-300 hover:bg-emerald-600 disabled:bg-slate-300"
+  className="h-11 sm:h-12 w-full p-2 sm:p-0 rounded-full bg-slate-900 text-white transition-all duration-300 hover:bg-emerald-600 disabled:bg-slate-300"
 >
   <Link
     to={`/products/${_id}`}
