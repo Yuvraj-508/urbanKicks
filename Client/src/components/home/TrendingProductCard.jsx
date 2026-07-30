@@ -58,14 +58,14 @@ export default function TrendingProductCard({ product }) {
             src={image}
             alt={name}
             loading="lazy"
-            className="aspect-square w-full object-cover transition duration-500 group-hover:scale-110"
-          />
+className="aspect-square w-full object-cover object-center transition duration-500 group-hover:scale-105"          />
         </Link>
 
         {/* Discount */}
 
         {discount > 0 && (
-          <span className="absolute left-4 top-4 rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
+          <span className="absolute left-3 top-3
+sm:left-4 sm:top-4 rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
             -{discount}%
           </span>
         )}
@@ -73,7 +73,8 @@ export default function TrendingProductCard({ product }) {
         {/* New */}
 
         {isNew && (
-          <span className="absolute left-4 top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-lg">
+          <span className="absolute left-3 top-12
+sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-lg">
             NEW
           </span>
         )}
