@@ -21,7 +21,9 @@ export default function Hero() {
         <div className="absolute bottom-32 left-1/3 h-2 w-2 rounded-full bg-emerald-500" />
       </div>
 
-      <div className="relative mx-auto flex sm:min-h-[92vh] max-w-7xl flex-col justify-center px-5 lg:pt-25 pt-10 sm:pb-10 pb-5 lg:min-h-screen lg:flex-row lg:items-center lg:justify-between">
+      <div className="relative mx-auto flex sm:min-h-[92vh] max-w-7xl flex-col justify-center px-4
+sm:px-5
+lg:px-8 lg:pt-25 pt-10 sm:pb-10 pb-5 lg:min-h-screen lg:flex-row lg:items-center lg:justify-between">
         {/* LEFT */}
 
         <motion.div
@@ -34,7 +36,9 @@ export default function Hero() {
             🔥 BEST COLLECTION 2026
           </span>
 
-          <h1 className="mt-8 text-[44px] font-black leading-[0.95] tracking-tight text-slate-900 sm:text-6xl lg:text-8xl">
+          <h1 className="mt-8 text-4xl
+sm:text-6xl
+lg:text-8xl font-black leading-[0.95] tracking-tight text-slate-900 ">
             STEP INTO
             <span className="mt-2 block bg-gradient-to-r from-emerald-600 to-emerald-400 bg-clip-text text-transparent">
               GREATNESS
@@ -49,8 +53,7 @@ export default function Hero() {
 
           {/* Buttons */}
 
-          <div className="mt-10 flex  items-center justify-center gap-4 sm:items-start sm:justify-start">
-            <Button 
+<div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-start">            <Button 
               asChild
               size="lg"
               className="h-14  rounded-full bg-emerald-600 px-8 text-base font-semibold shadow-lg transition hover:bg-emerald-700 sm:w-auto"
@@ -68,7 +71,7 @@ export default function Hero() {
               asChild
               size="lg"
               variant="outline"
-              className="h-14  rounded-full border-slate-300 px-8 text-base sm:w-auto"
+              className="w-full sm:w-auto h-14  border-slate-300 px-8 text-base "
             >
               <Link
                 to="/all-products"
@@ -81,7 +84,7 @@ export default function Hero() {
 
           {/* Feature Cards */}
 
-          <div className="mt-10 grid grid-cols-3 gap-4 sm:grid-cols-3">
+          <div className="mt-10 grid grid-cols-3 gap-2 sm:grid-cols-3">
             <div className="rounded-2xl border bg-white p-4 shadow-sm">
               <Star className="mx-auto h-6 w-6 fill-yellow-400 text-yellow-400 lg:mx-0" />
 
