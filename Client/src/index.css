@@ -182,3 +182,22 @@ body {
   overflow-x: hidden;
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+ 
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+ 
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+  will-change: transform;
+}
+ 
+.animate-float-slow {
+  animation: float-slow 3s ease-in-out infinite;
+  will-change: transform;
+}

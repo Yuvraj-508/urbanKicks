@@ -130,7 +130,7 @@ export default function ProductCard({ product }) {
         <img
           src={image}
           alt={product.name}
-          className={`aspect-square w-full object-contain p-4 transition duration-500 ${
+          className={` w-full  object-contain p-4 transition duration-500 ${
             images.length > 1
               ? "group-hover:scale-105 group-hover:opacity-0"
               : "group-hover:scale-105"
@@ -140,7 +140,7 @@ export default function ProductCard({ product }) {
           <img
             src={secondImage}
             alt={product.name}
-            className="absolute inset-0 aspect-square w-full object-contain p-4 opacity-0 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
+            className="absolute inset-0  w-full object-contain p-4 opacity-0 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
           />
         )}
       </div>
@@ -176,14 +176,14 @@ export default function ProductCard({ product }) {
             {sizes.slice(0, 4).map((size) => (
               <span
                 key={size}
-                className="flex h-8 w-8 items-center justify-center rounded-full border text-xs font-semibold"
+                className="flex h-5 w-5 items-center justify-center rounded-full border text-xs font-semibold"
               >
                 {size}
               </span>
             ))}
 
             {sizes.length > 4 && (
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold">
                 +{sizes.length - 4}
               </span>
             )}
@@ -194,7 +194,7 @@ export default function ProductCard({ product }) {
         <div className="flex items-end justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-emerald-600">
+              <span className="text-xl font-bold text-emerald-600">
                 ₹{sellingPrice.toLocaleString("en-IN")}
               </span>
 
