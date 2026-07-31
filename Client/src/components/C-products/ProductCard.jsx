@@ -105,7 +105,7 @@ export default function ProductCard({ product }) {
         <Button
           size="icon"
           variant="secondary"
-          className="absolute bottom-3 left-3 z-20 h-9 w-9 rounded-full"
+          className="absolute hidden bottom-3 left-3 z-20 h-9 w-9 rounded-full"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -117,7 +117,7 @@ export default function ProductCard({ product }) {
         <Button
           size="icon"
           variant="secondary"
-          className="absolute bottom-3 right-3 z-20 h-9 w-9 rounded-full"
+          className="absolute hidden bottom-3 right-3 z-20 h-9 w-9 rounded-full"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
