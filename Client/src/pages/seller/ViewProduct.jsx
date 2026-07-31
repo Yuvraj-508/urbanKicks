@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
-import { ArrowLeft, Package, Tag, Layers } from "lucide-react";
+import { ArrowLeft, Package, Tag, Layers, Palette, Box } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getProduct } from "@/services/product.service";
+import ColorSwatch from "@/components/product/ColorSwatch";
 
 export default function ViewProduct() {
   const { id } = useParams();
@@ -19,24 +20,44 @@ export default function ViewProduct() {
 
   const fetchProduct = async () => {
     try {
+      setLoading(true);
+
       const response = await getProduct(id);
+
       setProduct(response.product);
     } catch (error) {
       console.error(error);
 
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to load product."
-      );
+      toast.error(error.response?.data?.message || "Failed to load product.");
     } finally {
       setLoading(false);
     }
   };
 
+  const totalStock = useMemo(() => {
+    return (
+      product?.variants?.reduce(
+        (total, variant) =>
+          total + variant.sizes.reduce((sum, size) => sum + size.stock, 0),
+        0,
+      ) || 0
+    );
+  }, [product]);
+
+  const allSizes = useMemo(() => {
+    return [
+      ...new Set(
+        product?.variants?.flatMap((variant) =>
+          variant.sizes.map((size) => size.size),
+        ) || [],
+      ),
+    ];
+  }, [product]);
+
   if (loading) {
     return (
       <div className="flex h-[450px] items-center justify-center">
-        <p className="text-slate-500">Loading product...</p>
+        Loading...
       </div>
     );
   }
@@ -47,9 +68,7 @@ export default function ViewProduct() {
         <h2 className="text-xl font-semibold">Product not found</h2>
 
         <Link to="/seller/products">
-          <Button className="mt-6">
-            Back to Products
-          </Button>
+          <Button className="mt-5">Back to Products</Button>
         </Link>
       </div>
     );
@@ -62,19 +81,15 @@ export default function ViewProduct() {
       <div className="flex items-center justify-between">
         <div>
           <Link to="/seller/products">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Button>
           </Link>
 
-          <h1 className="mt-3 text-3xl font-bold">
-            {product.name}
-          </h1>
+          <h1 className="mt-3 text-3xl font-bold">{product.name}</h1>
 
-          <p className="text-slate-500">
-            Product Details
-          </p>
+          <p className="text-slate-500">Product Details</p>
         </div>
 
         <Link to={`/seller/products/edit/${product._id}`}>
@@ -82,26 +97,23 @@ export default function ViewProduct() {
         </Link>
       </div>
 
-      {/* Content */}
-
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Images */}
 
         <div className="rounded-2xl border bg-white p-5">
-          <h2 className="mb-4 text-lg font-semibold">
-            Images
-          </h2>
+          <h2 className="mb-5 text-lg font-semibold">Images</h2>
 
-          <div className="grid grid-cols-2 gap-4">
-            {product.images?.map((image) => (
-              <img
-                loading="lazy"
-                key={image.public_id}
-                src={image.url}
-                alt={product.name}
-                className="aspect-square rounded-xl border object-cover"
-              />
-            ))}
+          <div className="grid grid-cols-2 gap-3">
+            {product.variants?.flatMap((variant) =>
+              variant.images.map((image) => (
+                <img
+                  key={image.public_id}
+                  src={image.url}
+                  alt={product.name}
+                  className="aspect-square rounded-xl border object-cover"
+                />
+              )),
+            )}
           </div>
         </div>
 
@@ -109,9 +121,7 @@ export default function ViewProduct() {
 
         <div className="space-y-6 lg:col-span-2">
           <div className="rounded-2xl border bg-white p-6">
-            <h2 className="mb-5 text-lg font-semibold">
-              Basic Information
-            </h2>
+            <h2 className="mb-5 text-lg font-semibold">Basic Information</h2>
 
             <div className="grid gap-5 md:grid-cols-2">
               <Info
@@ -139,31 +149,30 @@ export default function ViewProduct() {
               />
 
               <Info
-                label="Stock"
-                value={product.stock}
+                icon={<Box size={18} />}
+                label="Total Stock"
+                value={totalStock}
               />
 
               <Info
                 label="Status"
-              value={
-  <Badge
-    className={
-      product.inStock
-        ? "bg-emerald-100 text-emerald-700"
-        : "bg-red-100 text-red-700"
-    }
-  >
-    {product.inStock ? "In Stock" : "Out of Stock"}
-  </Badge>
-}
+                value={
+                  <Badge
+                    className={
+                      totalStock > 0
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-red-100 text-red-700"
+                    }
+                  >
+                    {totalStock > 0 ? "In Stock" : "Out of Stock"}
+                  </Badge>
+                }
               />
             </div>
           </div>
 
           <div className="rounded-2xl border bg-white p-6">
-            <h2 className="mb-3 text-lg font-semibold">
-              Description
-            </h2>
+            <h2 className="mb-3 text-lg font-semibold">Description</h2>
 
             <p className="leading-7 text-slate-600">
               {product.description || "No description available."}
@@ -171,12 +180,10 @@ export default function ViewProduct() {
           </div>
 
           <div className="rounded-2xl border bg-white p-6">
-            <h2 className="mb-4 text-lg font-semibold">
-              Sizes
-            </h2>
+            <h2 className="mb-4 text-lg font-semibold">Available Sizes</h2>
 
             <div className="flex flex-wrap gap-2">
-              {product.sizes?.map((size) => (
+              {allSizes.map((size) => (
                 <Badge key={size} variant="secondary">
                   {size}
                 </Badge>
@@ -184,27 +191,60 @@ export default function ViewProduct() {
             </div>
           </div>
 
+          {/* Variants */}
+
           <div className="rounded-2xl border bg-white p-6">
-            <h2 className="mb-4 text-lg font-semibold">
-              Colors
-            </h2>
+            <h2 className="mb-5 text-lg font-semibold">Product Variants</h2>
 
-            <div className="flex flex-wrap gap-3">
-            {product.colors?.map((color) => (
-  <div
-    key={color.name}
-    className="flex items-center gap-2 rounded-lg border px-3 py-2"
-  >
-    <div
-      className="h-5 w-5 rounded-full border"
-      style={{
-        backgroundColor: color.value,
-      }}
-    />
+            <div className="space-y-5">
+              {product.variants.map((variant) => (
+                <div
+                  key={variant._id || variant.id}
+                  className="rounded-xl border p-5"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <ColorSwatch
+                        swatches={variant.color?.swatches}
+                        title={variant.color?.name}
+                        size="h-6 w-6"
+                      />
 
-    <span>{color.name}</span>
-  </div>
-))}
+                      <div>
+                        <h3 className="font-semibold">{variant.color.name}</h3>
+
+                        <p className="text-sm text-slate-500">
+                          SKU : {variant.sku}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Badge>
+                      {variant.sizes.reduce((sum, size) => sum + size.stock, 0)}{" "}
+                      Qty
+                    </Badge>
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {variant.sizes.map((size) => (
+                      <Badge key={size.size} variant="secondary">
+                        {size.size} ({size.stock})
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <div className="mt-5 flex gap-3 overflow-x-auto">
+                    {variant.images.map((image) => (
+                      <img
+                        key={image.public_id}
+                        src={image.url}
+                        alt=""
+                        className="h-20 w-20 rounded-lg border object-cover"
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -221,9 +261,7 @@ function Info({ icon, label, value }) {
         {label}
       </p>
 
-      <div className="font-medium">
-        {value}
-      </div>
+      <div className="font-medium">{value}</div>
     </div>
   );
 }

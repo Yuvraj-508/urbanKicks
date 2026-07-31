@@ -1,12 +1,8 @@
 import { motion } from "framer-motion";
-import {
-  Heart,
-  ShoppingBag,
-  Eye,
-  Star,
-} from "lucide-react";
+import { Heart, ShoppingBag, Eye, Star } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
+import ColorSwatch from "../product/ColorSwatch";
 
 export default function TrendingProductCard({ product }) {
   const {
@@ -15,8 +11,8 @@ export default function TrendingProductCard({ product }) {
     brand,
     price,
     offerPrice,
-    images,
-    stock,
+    variants,
+    totalStock,
     inStock,
     createdAt,
   } = product;
@@ -26,27 +22,19 @@ export default function TrendingProductCard({ product }) {
 
   const discount =
     originalPrice > sellingPrice
-      ? Math.round(
-          ((originalPrice - sellingPrice) / originalPrice) * 100
-        )
+      ? Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)
       : 0;
 
   const isNew =
-    Date.now() - new Date(createdAt).getTime() <
-    1000 * 60 * 60 * 24 * 14;
+    Date.now() - new Date(createdAt).getTime() < 1000 * 60 * 60 * 24 * 14;
 
-  const image =
-    images?.[0]?.url ||
-    images?.[0] ||
-    "/placeholder.png";
+  const firstVariant = variants?.[0];
+
+  const image = firstVariant?.images?.[0]?.url || "/placeholder.png";
 
   return (
-   <motion.article
-  whileHover={
-    window.matchMedia("(hover: hover)").matches
-      ? { y: -8 }
-      : {}
-  }
+    <motion.article
+      whileHover={window.matchMedia("(hover: hover)").matches ? { y: -8 } : {}}
       transition={{ duration: 0.25 }}
       className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-2xl"
     >
@@ -58,14 +46,17 @@ export default function TrendingProductCard({ product }) {
             src={image}
             alt={name}
             loading="lazy"
-className="aspect-square w-full object-cover object-center transition duration-500 group-hover:scale-105"          />
+            className="aspect-square w-full object-cover object-center transition duration-500 group-hover:scale-105"
+          />
         </Link>
 
         {/* Discount */}
 
         {discount > 0 && (
-          <span className="absolute left-3 top-3
-sm:left-4 sm:top-4 rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
+          <span
+            className="absolute left-3 top-3
+sm:left-4 sm:top-4 rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow-lg"
+          >
             -{discount}%
           </span>
         )}
@@ -73,8 +64,10 @@ sm:left-4 sm:top-4 rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-whit
         {/* New */}
 
         {isNew && (
-          <span className=" hidden md:flex absolute left-3 top-12
-sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-lg">
+          <span
+            className=" hidden md:flex absolute left-3 top-12
+sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-lg"
+          >
             NEW
           </span>
         )}
@@ -90,13 +83,17 @@ sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text
 
         {/* Quick View */}
 
-<div className="absolute inset-x-3 bottom-3 hidden justify-center lg:flex opacity-0 transition duration-300 group-hover:opacity-100">          <Button
+        <div className="absolute inset-x-3 bottom-3 hidden justify-center lg:flex opacity-0 transition duration-300 group-hover:opacity-100">
+          {" "}
+          <Button
             variant="secondary"
             className="rounded-full shadow-lg"
             asChild
           >
-            <Link to={`/products/${_id}`}
-            className="flex items-center justify-center gap-2">
+            <Link
+              to={`/products/${_id}`}
+              className="flex items-center justify-center gap-2"
+            >
               <Eye className="mr-2 h-4 w-4  " />
               Quick View
             </Link>
@@ -108,9 +105,7 @@ sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text
 
       <div className="space-y-4 p-4 sm:p-5">
         <div>
-          <p className="text-sm font-medium text-slate-500">
-            {brand}
-          </p>
+          <p className="text-sm font-medium text-slate-500">{brand}</p>
 
           <Link to={`/products/${_id}`}>
             <h3 className="mt-1 line-clamp-2 text-base sm:text-lg font-bold text-slate-900 transition hover:text-emerald-600">
@@ -118,7 +113,22 @@ sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text
             </h3>
           </Link>
         </div>
+    <div className="flex items-center gap-2">
+  {variants?.slice(0, 5).map((variant, index) => (
+    <ColorSwatch
+      key={variant._id || index}
+      swatches={variant.color?.swatches}
+      title={variant.color?.name}
+      size="h-4 w-4"
+    />
+  ))}
 
+  {variants?.length > 5 && (
+    <span className="text-xs text-slate-500">
+      +{variants.length - 5}
+    </span>
+  )}
+</div>
         {/* Rating */}
 
         <div className=" hidden lg:flex  items-center gap-2">
@@ -135,9 +145,7 @@ sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text
             ))}
           </div>
 
-          <span className="text-sm text-slate-500">
-            Featured
-          </span>
+          <span className="text-sm text-slate-500">Featured</span>
         </div>
 
         {/* Price */}
@@ -158,7 +166,7 @@ sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text
 
             {inStock ? (
               <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
-                {stock} In Stock
+                {totalStock} In Stock
               </span>
             ) : (
               <span className="inline-flex rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600">
@@ -170,19 +178,19 @@ sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text
 
         {/* Button */}
 
-   <Button
-  asChild
-  disabled={!inStock}
-  className="h-11 sm:h-12 w-full p-2 sm:p-0 rounded-full bg-slate-900 text-white transition-all duration-300 hover:bg-emerald-600 disabled:bg-slate-300"
->
-  <Link
-    to={`/products/${_id}`}
-    className="flex items-center justify-center gap-2"
-  >
-    <ShoppingBag className="h-4 w-4" />
-    <span>View Product</span>
-  </Link>
-</Button>
+        <Button
+          asChild
+          disabled={!inStock}
+          className="h-11 sm:h-12 w-full p-2 sm:p-0 rounded-full bg-slate-900 text-white transition-all duration-300 hover:bg-emerald-600 disabled:bg-slate-300"
+        >
+          <Link
+            to={`/products/${_id}`}
+            className="flex items-center justify-center gap-2"
+          >
+            <ShoppingBag className="h-4 w-4" />
+            <span>View Product</span>
+          </Link>
+        </Button>
       </div>
     </motion.article>
   );

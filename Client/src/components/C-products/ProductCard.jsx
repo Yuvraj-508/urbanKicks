@@ -1,50 +1,52 @@
 import { Link, useNavigate } from "react-router";
-import {
-  Heart,
-  ShoppingBag,
-  Eye,
-  Minus,
-  Plus,
-} from "lucide-react";
+import { Heart, ShoppingBag, Eye, Minus, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import useCartStore from "@/store/cartStore";
+import ColorSwatch from "../product/ColorSwatch";
 
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
 
-  const {
-    cartItems,
-    addItem,
-    updateQuantity,
-    removeItem,
-  } = useCartStore();
+  const { cartItems, addItem, updateQuantity, removeItem } = useCartStore();
 
-  const image =
-    product?.images?.[0]?.url ||
-    "/images/placeholder.png";
+  const firstVariant = product.variants?.[0];
 
-  const secondImage =
-    product?.images?.[1]?.url || image;
+  const images = firstVariant?.images || [];
+
+  const image = images[0]?.url || "/images/placeholder.png";
+
+  const secondImage = images[1]?.url || image;
+
+  const colors = product.variants || [];
+
+  const sizes = [
+    ...new Set(
+      product.variants?.flatMap((variant) =>
+        variant.sizes.map((size) => size.size),
+      ) || [],
+    ),
+  ];
+
+  const totalStock =
+    product.totalStock ??
+    product.variants?.reduce(
+      (total, variant) =>
+        total + variant.sizes.reduce((sum, size) => sum + size.stock, 0),
+      0,
+    ) ??
+    0;
 
   const originalPrice = Number(product.price ?? 0);
 
-  const sellingPrice = Number(
-    product.offerPrice ?? product.price ?? 0
-  );
+  const sellingPrice = Number(product.offerPrice ?? product.price ?? 0);
 
   const discount =
     originalPrice > sellingPrice
-      ? Math.round(
-          ((originalPrice - sellingPrice) /
-            originalPrice) *
-            100
-        )
+      ? Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)
       : 0;
 
-  const cartItem = cartItems.find(
-    (item) => item.product._id === product._id
-  );
+  const cartItem = cartItems.find((item) => item.product._id === product._id);
 
   const quantity = cartItem?.quantity || 0;
 
@@ -62,10 +64,7 @@ export default function ProductCard({ product }) {
     e.preventDefault();
     e.stopPropagation();
 
-    updateQuantity(
-      cartItem.id,
-      quantity + 1
-    );
+    updateQuantity(cartItem.id, quantity + 1);
   };
 
   const handleDecrease = (e) => {
@@ -75,10 +74,7 @@ export default function ProductCard({ product }) {
     if (quantity === 1) {
       removeItem(cartItem.id);
     } else {
-      updateQuantity(
-        cartItem.id,
-        quantity - 1
-      );
+      updateQuantity(cartItem.id, quantity - 1);
     }
   };
 
@@ -90,7 +86,6 @@ export default function ProductCard({ product }) {
       {/* IMAGE */}
 
       <div className="relative overflow-hidden bg-slate-50">
-
         {discount > 0 && (
           <span className="absolute left-3 top-3 z-20 rounded-full bg-red-500 px-2.5 py-1 text-[11px] font-bold text-white">
             {discount}% OFF
@@ -101,9 +96,9 @@ export default function ProductCard({ product }) {
           <span className="absolute right-3 top-3 z-20 rounded-full bg-red-600 px-2.5 py-1 text-[11px] font-semibold text-white">
             SOLD OUT
           </span>
-        ) : product.stock <= 5 ? (
+        ) : totalStock <= 5 ? (
           <span className="absolute right-3 top-3 z-20 rounded-full bg-orange-500 px-2.5 py-1 text-[11px] font-semibold text-white">
-            {product.stock} Left
+            {totalStock} Left
           </span>
         ) : null}
 
@@ -136,13 +131,12 @@ export default function ProductCard({ product }) {
           src={image}
           alt={product.name}
           className={`aspect-square w-full object-contain p-4 transition duration-500 ${
-            product.images?.length > 1
+            images.length > 1
               ? "group-hover:scale-105 group-hover:opacity-0"
               : "group-hover:scale-105"
           }`}
         />
-
-        {product.images?.length > 1 && (
+        {images.length > 1 && (
           <img
             src={secondImage}
             alt={product.name}
@@ -153,8 +147,7 @@ export default function ProductCard({ product }) {
 
       {/* CONTENT */}
 
-      <div className="space-y-3 p-4">
-
+      <div className="space-y-1 p-3">
         <p className="text-xs font-semibold uppercase tracking-widest text-emerald-600">
           {product.brand}
         </p>
@@ -162,28 +155,41 @@ export default function ProductCard({ product }) {
         <h3 className="line-clamp-2 min-h-[48px] text-base font-bold leading-6 text-slate-900 group-hover:text-emerald-600">
           {product.name}
         </h3>
+        <div className="flex items-center ml-0.5 justify-start my-2 gap-2">
+          {colors.slice(0, 5).map((variant, index) => (
+            <ColorSwatch
+              key={variant._id || variant.id || index}
+              swatches={variant.color?.swatches}
+              title={variant.color?.name}
+              size="w-4 h-4"
+            />
+          ))}
 
-        {product.sizes?.length > 0 && (
-          <div className="flex gap-2">
-            {product.sizes
-              .slice(0, 3)
-              .map((size) => (
-                <span
-                  key={size}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border text-xs font-semibold"
-                >
-                  {size}
-                </span>
-              ))}
+          {colors.length > 5 && (
+            <span className="text-xs font-medium text-slate-500">
+              +{colors.length - 5}
+            </span>
+          )}
+        </div>
+        {sizes.length > 0 && (
+          <div className="flex flex-wrap  gap-2">
+            {sizes.slice(0, 4).map((size) => (
+              <span
+                key={size}
+                className="flex h-8 w-8 items-center justify-center rounded-full border text-xs font-semibold"
+              >
+                {size}
+              </span>
+            ))}
 
-            {product.sizes.length > 3 && (
+            {sizes.length > 4 && (
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold">
-                +{product.sizes.length - 3}
+                +{sizes.length - 4}
               </span>
             )}
           </div>
         )}
-                {/* Price */}
+        {/* Price */}
 
         <div className="flex items-end justify-between">
           <div>
@@ -201,10 +207,7 @@ export default function ProductCard({ product }) {
 
             {discount > 0 && (
               <p className="text-xs font-medium text-red-500">
-                Save ₹
-                {(originalPrice - sellingPrice).toLocaleString(
-                  "en-IN"
-                )}
+                Save ₹{(originalPrice - sellingPrice).toLocaleString("en-IN")}
               </p>
             )}
           </div>

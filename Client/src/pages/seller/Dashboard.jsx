@@ -9,7 +9,7 @@ import {
   AlertTriangle,
   TrendingUp,
   Clock3,
-  Loader2
+  Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -30,6 +30,8 @@ export default function Dashboard() {
 
   const [stats, setStats] = useState({
     products: 0,
+    variants: 0,
+    inventory: 0,
   });
 
   const [lowStockProducts, setLowStockProducts] = useState([]);
@@ -57,23 +59,23 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-   <div className="flex min-h-[500px] items-center justify-center rounded-2xl bg-white">
-  <div className="flex flex-col items-center gap-4">
-    <div className="rounded-full bg-emerald-50 p-5">
-      <Loader2 className="h-10 w-10 animate-spin text-emerald-600" />
-    </div>
+      <div className="flex min-h-[500px] items-center justify-center rounded-2xl bg-white">
+        <div className="flex flex-col items-center gap-4">
+          <div className="rounded-full bg-emerald-50 p-5">
+            <Loader2 className="h-10 w-10 animate-spin text-emerald-600" />
+          </div>
 
-    <div className="text-center">
-      <h3 className="text-lg font-semibold text-slate-900">
-        Loading Dashboard...
-      </h3>
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-slate-900">
+              Loading Dashboard...
+            </h3>
 
-      <p className="mt-1 text-sm text-slate-500">
-        Please wait while we prepare your dashboard.
-      </p>
-    </div>
-  </div>
-</div>
+            <p className="mt-1 text-sm text-slate-500">
+              Please wait while we prepare your dashboard.
+            </p>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -92,12 +94,12 @@ export default function Dashboard() {
           </p>
         </div>
 
-   <Button
-  onClick={() => navigate("/seller/products")}
-  className="bg-emerald-600 hover:bg-emerald-700"
->
-  View Products
-</Button>
+        <Button
+          onClick={() => navigate("/seller/products")}
+          className="bg-emerald-600 hover:bg-emerald-700"
+        >
+          View Products
+        </Button>
       </section>
 
       {/* Stats */}
@@ -112,18 +114,18 @@ export default function Dashboard() {
         />
 
         <StatCard
-          title="Orders"
-          value="Coming Soon"
-          change=""
-          icon={<ShoppingCart className="h-5 w-5" />}
+          title="Variants"
+          value={stats.variants}
+          change="Live"
+          icon={<TrendingUp className="h-5 w-5" />}
           color="bg-emerald-100 text-emerald-600"
         />
 
         <StatCard
-          title="Customers"
-          value="Coming Soon"
-          change=""
-          icon={<Users className="h-5 w-5" />}
+          title="Inventory"
+          value={stats.inventory}
+          change="Live"
+          icon={<Package className="h-5 w-5" />}
           color="bg-violet-100 text-violet-600"
         />
 
@@ -208,7 +210,7 @@ export default function Dashboard() {
                       <h3 className="font-medium">{product.name}</h3>
 
                       <p className="mt-1 text-sm text-slate-500">
-                        Only {product.stock} left
+                        {product.color} • Only {product.stock} left
                       </p>
                     </div>
 

@@ -40,58 +40,88 @@ export default function EditProduct() {
     }
   };
 
-  const handleSubmit = async (
-    formData,
-    newImages,
-    deletedImages = []
-  ) => {
-    try {
-      setSaving(true);
+const handleSubmit = async (product) => {
+  try {
+    setSaving(true);
 
-      const data = new FormData();
+    const formData = new FormData();
 
-      Object.entries(formData).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          data.append(key, JSON.stringify(value));
-        } else {
-          data.append(key, value);
+    // Basic Information
+    formData.append("name", product.name.trim());
+    formData.append(
+      "description",
+      product.description?.trim() || ""
+    );
+    formData.append("brand", product.brand);
+    formData.append("category", product.category);
+    formData.append("gender", product.gender);
+
+    // Pricing
+    formData.append("price", Number(product.price));
+    formData.append(
+      "offerPrice",
+      Number(product.offerPrice)
+    );
+
+    // Product Details
+    formData.append("featured", product.featured);
+    formData.append("bestseller", product.bestseller);
+    formData.append("newArrival", product.newArrival);
+    formData.append("sale", product.sale);
+    formData.append("active", product.active);
+
+    formData.append(
+      "tags",
+      JSON.stringify(product.tags)
+    );
+
+    // Variants (without new image files)
+    const variants = product.variants.map((variant) => ({
+      color: variant.color,
+      sku: variant.sku,
+      sizes: variant.sizes,
+
+      // Keep only existing Cloudinary images
+      images: variant.images.filter(
+        (img) => !(img instanceof File)
+      ),
+    }));
+
+    formData.append(
+      "variants",
+      JSON.stringify(variants)
+    );
+
+    // Upload only newly selected images
+    product.variants.forEach((variant, index) => {
+      variant.images.forEach((img) => {
+        if (img instanceof File) {
+          formData.append(
+            `variantImages_${index}`,
+            img
+          );
         }
       });
+    });
 
-      data.append(
-  "existingImages",
-  JSON.stringify(formData.images || [])
-);
+    const response = await updateProduct(id, formData);
 
+    toast.success(
+      response.message || "Product updated successfully."
+    );
 
-      newImages.forEach((image) => {
-        data.append("images", image);
-      });
+    navigate("/seller/products");
+  } catch (error) {
+    console.error(error);
 
-
-      data.append(
-        "deletedImages",
-        JSON.stringify(deletedImages)
-      );
-
-      const response = await updateProduct(id, data);
-
-      toast.success(
-        response.message || "Product updated successfully."
-      );
-
-      navigate("/seller/products");
-    } catch (error) {
-      console.error(error);
-
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to update product."
-      );
-    } finally {
-      setSaving(false);
-    }
-  };
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to update product."
+    );
+  } finally {
+    setSaving(false);
+  }
+};
 
   if (loading) {
     return (

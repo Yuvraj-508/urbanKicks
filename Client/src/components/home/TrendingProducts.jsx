@@ -12,9 +12,12 @@ export default function TrendingProducts() {
   const loading = useProductStore((state) => state.loading);
   const error = useProductStore((state) => state.error);
 
-  const trendingProducts = products
-    .filter((product) => product.inStock)
-    .slice(0, 4);
+const trendingProducts = products
+  .filter(
+    (product) => product.inStock && product.bestseller
+  )
+  .slice(0, 4);
+  
 const messages = [
   "👟 Preparing your sneakers...",
   "🚚 Loading latest arrivals...",
@@ -76,7 +79,7 @@ useEffect(() => {
         <div className="absolute inset-0 animate-ping rounded-full bg-emerald-400/20"></div>
       </div>
 
-      <h3 className="mt-6 text-2xl font-bold text-slate-900 transition-all duration-500">
+      <h3 className="mt-6 text-xl font-bold text-slate-900 transition-all duration-500">
   {loadingMessage}
 </h3>
 

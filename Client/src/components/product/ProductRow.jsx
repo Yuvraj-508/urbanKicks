@@ -3,12 +3,11 @@ import { Link } from "react-router";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import ColorSwatch from "./ColorSwatch";
 
 export default function ProductRow({
   product,
   onDelete,
-  onStockToggle,
   mobile = false,
 }) {
   const {
@@ -18,95 +17,86 @@ export default function ProductRow({
     category,
     price,
     offerPrice,
-    stock,
+    image,
+    totalStock,
+    totalVariants,
     inStock,
-
-    sizes = [],
-    colors = [],
-    images = [],
+    variants = [],
   } = product;
 
-  const image =
-    images.length > 0
-      ? images[0].url
-      : "https://placehold.co/100x100?text=No+Image";
+  const productImage =
+    image || "https://placehold.co/100x100?text=No+Image";
+
+const colorVariants = variants.map((variant) => ({
+  name: variant.color?.name,
+  swatches: variant.color?.swatches || [],
+}));
+
+  const sizes = [
+    ...new Set(
+      variants.flatMap((variant) =>
+        variant.sizes.map((size) => size.size)
+      )
+    ),
+  ];
 
   // ================= MOBILE =================
 
   if (mobile) {
     return (
       <div
-        className={`flex gap-4 p-4 transition-all duration-300 ${
-          inStock ? "opacity-100" : "opacity-60 bg-slate-50"
+        className={`flex gap-4 p-4 ${
+          inStock ? "" : "bg-slate-50 opacity-70"
         }`}
       >
         <img
-          src={image}
+          src={productImage}
           alt={name}
-          className={`h-24 w-24 rounded-xl border object-cover transition-all duration-300 ${
-            inStock ? "" : "grayscale opacity-70"
-          }`}
+          className="h-24 w-24 rounded-xl border object-cover"
         />
 
-        <div className="flex-1 space-y-2">
-          <div>
-            <h3
-              className={`font-semibold ${
-                inStock ? "text-slate-900" : "text-slate-500"
-              }`}
-            >
-              {name}
-            </h3>
-            <p className="text-sm text-slate-500">
-              {brand} • {category}
-            </p>
-          </div>
+        <div className="flex-1">
+          <h3 className="font-semibold">{name}</h3>
 
-          <div className="flex items-center gap-3 text-sm">
-            <span
-              className={`font-semibold ${
-                inStock ? "text-emerald-600" : "text-slate-400"
-              }`}
-            >
-              {" "}
+          <p className="text-sm text-slate-500">
+            {brand} • {category}
+          </p>
+
+          <div className="mt-2">
+            <span className="font-semibold text-emerald-600">
               ₹{offerPrice || price}
             </span>
 
             {offerPrice && (
-              <span className="text-slate-400 line-through">₹{price}</span>
+              <span className="ml-2 text-slate-400 line-through">
+                ₹{price}
+              </span>
             )}
           </div>
 
-          <div className="flex flex-wrap gap-1">
+          <div className="mt-3 flex flex-wrap gap-1">
             {sizes.map((size) => (
-              <Badge
-                key={size}
-                variant="secondary"
-                className={!inStock ? "opacity-60" : ""}
-              >
-                {" "}
+              <Badge key={size} variant="secondary">
                 {size}
               </Badge>
             ))}
           </div>
 
-          <div className="flex items-center gap-1">
-            {colors.map((color) => (
-              <span
-                key={color.name}
-                className={`h-4 w-4 rounded-full border border-slate-300 ${
-                  !inStock ? "opacity-40 grayscale" : ""
-                }`}
-                style={{
-                  backgroundColor: color.value,
-                }}
-                title={color.name}
-              />
-            ))}
-          </div>
-          <div className="flex items-center justify-between">
+<div className="flex gap-2 mt-2">
+  {colorVariants.map((variant, index) => (
+    <ColorSwatch
+      key={index}
+      swatches={variant.swatches}
+      title={variant.name}
+    />
+  ))}
+</div>
+
+          <div className="mt-3 flex items-center justify-between">
             <Badge variant={inStock ? "default" : "destructive"}>
-              {inStock ? `Stock : ${stock}` : "Out of Stock"}
+              {inStock
+                ? `${totalStock} in stock`
+                : "Out of Stock"}
             </Badge>
 
             <div className="flex gap-1">
@@ -122,7 +112,11 @@ export default function ProductRow({
                 </Link>
               </Button>
 
-              <Button size="icon" variant="ghost" onClick={() => onDelete(_id)}>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => onDelete(_id)}
+              >
                 <Trash2 className="h-4 w-4 text-red-600" />
               </Button>
             </div>
@@ -135,97 +129,73 @@ export default function ProductRow({
   // ================= DESKTOP =================
 
   return (
-    <tr
-      className={`border-b transition-all duration-300 ${
-        inStock ? "opacity-100 hover:bg-slate-50" : "opacity-55 bg-slate-50/70"
-      }`}
-    >
-      {" "}
-      {/* Image */}
+    <tr className="border-b hover:bg-slate-50">
       <td className="px-5 py-4">
         <img
-          src={image}
+          src={productImage}
           alt={name}
-          loading="lazy"
-          className={`h-16 w-16 rounded-xl border object-cover transition-all duration-300 ${
-            inStock ? "" : "grayscale opacity-60"
-          }`}
+          className="h-16 w-16 rounded-xl border object-cover"
         />
       </td>
-      {/* Product */}
+
       <td className="px-5 py-4">
-        <h3
-          className={`font-semibold transition-colors ${
-            inStock ? "text-slate-900" : "text-slate-500"
-          }`}
-        >
-          {name}
-        </h3>
+        <h3 className="font-semibold">{name}</h3>
+
         <p className="text-sm text-slate-500">{brand}</p>
 
         <p className="text-xs text-slate-400">{category}</p>
       </td>
-      {/* Price */}
+
       <td className="px-5 py-4">
-        <div className={`font-semibold ${inStock ? "" : "text-slate-400"}`}>
+        <div className="font-semibold">
           ₹{offerPrice || price}
         </div>
+
         {offerPrice && (
-          <div className="text-sm text-slate-400 line-through">₹{price}</div>
+          <div className="text-sm text-slate-400 line-through">
+            ₹{price}
+          </div>
         )}
       </td>
-      {/* Sizes */}
+
       <td className="px-5 py-4">
         <div className="flex flex-wrap gap-1">
           {sizes.map((size) => (
-  <Badge
-    key={size}
-    variant="secondary"
-    className={!inStock ? "opacity-60" : ""}
-  >
-    {size}
-  </Badge>
-))}
-        </div>
-      </td>
-      {/* Colors */}
-      <td className="px-5 py-4">
-        <div className="flex gap-2">
-          {colors.map((color) => (
-            <span
-              key={color.name}
-              className={`h-5 w-5 rounded-full border transition-all ${
-                !inStock ? "opacity-40 grayscale" : ""
-              }`}
-              style={{
-                backgroundColor: color.value,
-              }}
-            />
+            <Badge key={size} variant="secondary">
+              {size}
+            </Badge>
           ))}
         </div>
       </td>
-      {/* Qty */}
-      <td className="px-5 py-4 text-center font-semibold">{stock}</td>
-      {/* Status */}
-      <td className="px-5 py-4">
-        <div className="flex items-center justify-center gap-3">
-          <Badge
-            className={`transition-all ${
-              inStock
-                ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-                : "bg-red-100 text-red-700 hover:bg-red-100"
-            }`}
-          >
-            {inStock ? "In Stock" : "Out of Stock"}
-          </Badge>
 
-          <Switch
-            checked={inStock}
-            onCheckedChange={(checked) => onStockToggle(product._id, checked)}
-          />
-        </div>
+      <td className="px-5 py-4">
+<div className="flex gap-2">
+  {colorVariants.map((variant, index) => (
+    <ColorSwatch
+      key={index}
+      swatches={variant.swatches}
+      title={variant.name}
+    />
+  ))}
+</div>
       </td>
-      {/* Actions */}
+
+      <td className="px-5 py-4 text-center font-semibold">
+        {totalStock}
+      </td>
+
+      <td className="px-5 py-4 text-center">
+        <Badge
+          className={
+            inStock
+              ? "bg-emerald-100 text-emerald-700"
+              : "bg-red-100 text-red-700"
+          }
+        >
+          {inStock ? "In Stock" : "Out of Stock"}
+        </Badge>
+      </td>
+
       <td className="px-5 py-4">
         <div className="flex justify-center gap-1">
           <Button asChild size="icon" variant="ghost">
@@ -243,7 +213,7 @@ export default function ProductRow({
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => onDelete(product._id)}
+            onClick={() => onDelete(_id)}
           >
             <Trash2 className="h-4 w-4 text-red-600" />
           </Button>
@@ -252,3 +222,4 @@ export default function ProductRow({
     </tr>
   );
 }
+

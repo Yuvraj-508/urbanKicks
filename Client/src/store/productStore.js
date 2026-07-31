@@ -22,6 +22,9 @@ const useProductStore = create((set, get) => ({
   products: [],
   product: null,
 
+  trendingProducts: [],
+trendingLoading: false,
+
   loading: false,
   productLoading: false,
 
@@ -132,47 +135,66 @@ const useProductStore = create((set, get) => ({
   }
 },
 
+fetchTrendingProducts: async () => {
+  set({
+    trendingLoading: true,
+    error: null,
+  });
+
+  try {
+    const res = await getProducts({
+      page: 1,
+      limit: 8,
+      filters: {
+        bestseller: true,
+      },
+    });
+
+    set({
+      trendingProducts: res.products,
+      trendingLoading: false,
+    });
+  } catch (error) {
+    set({
+      trendingLoading: false,
+      error:
+        error.response?.data?.message ||
+        error.message ||
+        "Unable to load trending products.",
+    });
+  }
+},
+
   // ===========================
   // Single Product
   // ===========================
 
-  fetchProduct: async (id) => {
-    // Check if product already exists in list
-    const cached = get().products.find(
-      (item) => item._id === id
-    );
+fetchProduct: async (id) => {
+  set({
+    productLoading: true,
+    error: null,
+  });
 
-    if (cached) {
-      set({
-        product: cached,
-      });
-
-      return cached;
-    }
+  try {
+    const res = await getProduct(id);
 
     set({
-      productLoading: true,
-      error: null,
+      product: res.product,
+      productLoading: false,
     });
 
-    try {
-      const res = await getProduct(id);
+    return res.product;
+  } catch (error) {
+    set({
+      productLoading: false,
+      error:
+        error.response?.data?.message ||
+        "Unable to load product.",
+    });
 
-      set({
-        product: res.product,
-        productLoading: false,
-      });
-
-      return res.product;
-    } catch (error) {
-      set({
-        productLoading: false,
-        error: error.message,
-      });
-
-      return null;
-    }
-  },
+    return null;
+  }
+},
 
   clearProduct: () =>
     set({
@@ -186,6 +208,21 @@ const useProductStore = create((set, get) => ({
     },
     page: 1,
   })),
+  getTotalStock: () => {
+  const product = get().product;
+
+  if (!product) return 0;
+
+  return product.variants.reduce(
+    (total, variant) =>
+      total +
+      variant.sizes.reduce(
+        (sum, size) => sum + size.stock,
+        0
+      ),
+    0
+  );
+},
 }));
 
 export default useProductStore;

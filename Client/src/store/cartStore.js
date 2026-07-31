@@ -1,10 +1,15 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const isSameVariant = (item, productId, size, color) =>
+const isSameVariant = (
+  item,
+  productId,
+  variantId,
+  size
+) =>
   item.product._id === productId &&
-  item.size === size &&
-  item.color === color;
+  item.variantId === variantId &&
+  item.size === size;
 
 const useCartStore = create(
   persist(
@@ -26,20 +31,33 @@ const useCartStore = create(
         quantity = 1,
         size,
         color,
+        variantId,
       }) => {
+        const selectedVariant =
+          product?.variants?.find(
+            (variant) => variant._id === variantId
+          ) || product?.variants?.[0];
+
         const selectedSize =
-          size || product?.sizes?.[0] || null;
+          size ||
+          selectedVariant?.sizes?.[0]?.size ||
+          null;
 
         const selectedColor =
-          color || product?.colors?.[0]?.name || null;
+          color ||
+          selectedVariant?.color?.name ||
+          null;
+
+        const selectedVariantId =
+          variantId || selectedVariant?._id;
 
         set((state) => {
           const existingItem = state.cartItems.find((item) =>
             isSameVariant(
               item,
               product._id,
-              selectedSize,
-              selectedColor
+              selectedVariantId,
+              selectedSize
             )
           );
 
@@ -49,8 +67,8 @@ const useCartStore = create(
                 isSameVariant(
                   item,
                   product._id,
-                  selectedSize,
-                  selectedColor
+                  selectedVariantId,
+                  selectedSize
                 )
                   ? {
                       ...item,
@@ -65,8 +83,9 @@ const useCartStore = create(
             cartItems: [
               ...state.cartItems,
               {
-                id: `${product._id}-${selectedSize}-${selectedColor}`,
+                id: `${product._id}-${selectedVariantId}-${selectedSize}`,
                 product,
+                variantId: selectedVariantId,
                 quantity,
                 size: selectedSize,
                 color: selectedColor,
@@ -113,7 +132,8 @@ const useCartStore = create(
       subtotal: () =>
         get().cartItems.reduce((total, item) => {
           const price =
-            item.product.offerPrice ?? item.product.price;
+            item.product.offerPrice ??
+            item.product.price;
 
           return total + price * item.quantity;
         }, 0),

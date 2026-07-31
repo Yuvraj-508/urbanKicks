@@ -25,18 +25,19 @@ export default function Products() {
   const sort = useProductStore((state) => state.sort);
   const filters = useProductStore((state) => state.filters);
 
-  const setPage = useProductStore((state) => state.setPage);
   const setSearch = useProductStore((state) => state.setSearch);
   const setSort = useProductStore((state) => state.setSort);
 
-  const fetchProducts = useProductStore((state) => state.fetchProducts);
-  useEffect(() => {
-    setCategory(category);
-  }, [category, setCategory]);
+  const setPage = useProductStore((state) => state.setPage);
 
   useEffect(() => {
-    fetchProducts();
-  }, [page, search, sort, filters, fetchProducts]);
+    setCategory(category);
+    setPage(1);
+  }, [category, setCategory, setPage]);
+
+  useEffect(() => {
+    useProductStore.getState().fetchProducts();
+  }, [page, search, sort, filters]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -72,6 +73,14 @@ export default function Products() {
               <div className="flex min-h-[40vh] items-center justify-center">
                 <p className="text-lg font-medium text-red-500">{error}</p>
               </div>
+            ) : products.length === 0 ? (
+              <div className="flex min-h-[40vh] flex-col items-center justify-center">
+                <h3 className="text-xl font-semibold">No products found</h3>
+
+                <p className="mt-2 text-slate-500">
+                  Try changing your filters or search.
+                </p>
+              </div>
             ) : (
               <ProductGrid products={products} view={view} />
             )}
@@ -88,7 +97,7 @@ export default function Products() {
         </div>
       </section>
 
-      <Newsletter />
+      {/* <Newsletter /> */}
     </>
   );
 }

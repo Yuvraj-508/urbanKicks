@@ -10,6 +10,7 @@ import {
   getProductById,
   updateProduct,
   getRelatedProducts,
+  // getTrendingProducts,
 } from "../controlllers/product.controller.js";
 
 // import authSeller from "../middleware/authSeller.js";
@@ -18,30 +19,29 @@ const router = express.Router();
 
 router.post(
   "/",
-//   authSeller,
-  upload.array("images", 5),
-  addProduct
+  // authSeller,
+  upload.any(),
+  addProduct,
 );
 
 router.get("/", getProducts);
-     router.get("/related/:id", getRelatedProducts);
+// router.get("/trending", getTrendingProducts);
+router.get("/related/:id", getRelatedProducts);
 
 router.get("/:id", getProductById);
 
-router.put(
+router.put("/:id", upload.any(), updateProduct);
+
+router.delete(
   "/:id",
-//   authSeller,
-  upload.array("images", 5),
-  updateProduct
+  // authSeller,
+  deleteProduct,
 );
 
-router.delete("/:id", 
-    // authSeller,
-     deleteProduct);
-
-router.patch("/:id/stock", 
-    // authSeller,
-     updateStock);
-
+router.patch(
+  "/:id/stock",
+  // authSeller,
+  updateStock,
+);
 
 export default router;

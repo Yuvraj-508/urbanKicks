@@ -1,14 +1,17 @@
 import axios from "axios";
 
+
+
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
   timeout: 30000,
   headers: {
-    "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
+
+
 
 // ==============================
 // Request Interceptor

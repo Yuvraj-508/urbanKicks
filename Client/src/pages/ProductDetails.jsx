@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";import { useParams } from "react-router-dom";
 
 import ProductGallery from "@/components/C-products/ProductGallery";
 import ProductInfo from "@/components/C-products/ProductInfo";
@@ -9,7 +8,7 @@ import useProductStore from "@/store/productStore";
 
 export default function ProductDetails() {
   const { id } = useParams();
-
+const [selectedVariant, setSelectedVariant] = useState(0);
   const product = useProductStore((state) => state.product);
   const loading = useProductStore((state) => state.productLoading);
   const error = useProductStore((state) => state.error);
@@ -30,6 +29,10 @@ export default function ProductDetails() {
     };
   }, [id, fetchProduct, clearProduct]);
 
+  useEffect(() => {
+  setSelectedVariant(0);
+}, [product?._id]);
+
  if (loading) {
   return (
     <PageLoader
@@ -38,6 +41,8 @@ export default function ProductDetails() {
     />
   );
 }
+
+
 
 if (error) {
   return (
@@ -75,9 +80,15 @@ if (!product) {
     <>
       <section className="py-6">
         <div className="mx-auto grid max-w-7xl items-start gap-8 px-5 lg:grid-cols-[1fr_0.95fr]">
-          <ProductGallery product={product} />
-          <ProductInfo product={product} />
-        </div>
+<ProductGallery
+  product={product}
+  selectedVariant={selectedVariant}
+/>      
+<ProductInfo
+  product={product}
+  selectedVariant={selectedVariant}
+  setSelectedVariant={setSelectedVariant}
+/>        </div>
       </section>
 
       <RelatedProducts productId={product._id} />

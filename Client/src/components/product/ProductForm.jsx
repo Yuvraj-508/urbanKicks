@@ -1,321 +1,243 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
-import ImageUploader from "./ImageUploader";
-import SizeSelector from "./SizeSelector";
-import ColorSelector from "./ColorSelector";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
-const categories = [
-  "Running",
-  "Sneakers",
-  "Casual",
-  "Sports",
-  "Boots",
-  "Sleepers"
-];
+import BasicInformation from "./BasicInformation";
+import PricingSection from "./PricingSection";
+import VariantSection from "./VariantSection";
+import ProductPreview from "./ProductPreview";
+import ProductDetailss from "./ProductDetailss";
 
 export default function ProductForm({
   onSubmit,
-  initialData = {},
+  initialData = null,
   loading = false,
 }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    brand: "",
-    category: "",
-    description: "",
-    price: "",
-    offerPrice: "",
-    stock: "",
-    sizes: [],
-    colors: [],
-  });
 
-  const [existingImages, setExistingImages] = useState([]);
-  const [images, setImages] = useState([]);
-  const [deletedImages, setDeletedImages] = useState([]);
 
-  useEffect(() => {
-    if (!initialData || Object.keys(initialData).length === 0) return;
+const emptyProduct = {
+  name: "",
+  brand: "",
+  category: "",
+  gender: "men",
 
-    setFormData({
-      name: initialData.name || "",
-      brand: initialData.brand || "",
-      category: initialData.category || "",
-      description: initialData.description || "",
-      price: initialData.price || "",
-      offerPrice: initialData.offerPrice || "",
-      stock: initialData.stock || "",
-      sizes: initialData.sizes || [],
-      colors: initialData.colors || [],
-    });
+  description: "",
 
-    setExistingImages(initialData.images || []);
-    setDeletedImages([]);
-    setImages([]);
-  }, [initialData]);
+  price: "",
+  offerPrice: "",
 
-const handleChange = (e) => {
-  const { name, value } = e.target;
+  featured: false,
+  bestseller: false,
+  newArrival: false,
+  sale: false,
 
-  setFormData((prev) => ({
-    ...prev,
-    [name]:
-      name === "category"
-        ? value.toLowerCase()
-        : value,
-  }));
+  active: true,
+
+  tags: [],
+
+  variants: [],
 };
 
-  const submitHandler = (e) => {
+  const [product, setProduct] = useState(emptyProduct);
+
+
+  useEffect(() => {
+  if (!initialData) return;
+
+  setProduct({
+    ...initialData,
+
+    tags: initialData.tags || [],
+
+variants: (initialData.variants || []).map((variant) => ({
+  ...variant,
+
+  id: variant.id || variant._id || crypto.randomUUID(),
+
+  color: {
+    name: variant.color?.name || "",
+
+    swatches:
+      variant.color?.swatches ||
+      [
+        {
+          name: variant.color?.name || "",
+          value: variant.color?.value || "#000000",
+        },
+      ],
+  },
+
+  images: variant.images || [],
+
+  sizes: variant.sizes || [],
+})),
+  });
+}, [initialData]);
+
+
+  const validate = () => {
+    if (!product.name.trim())
+      return toast.error("Product name is required.");
+
+    if (!product.brand.trim())
+      return toast.error("Brand is required.");
+
+    if (!product.category)
+      return toast.error("Please select a category.");
+
+    if (!product.price)
+      return toast.error("Original price is required.");
+
+    if (!product.offerPrice)
+      return toast.error("Selling price is required.");
+
+    if (Number(product.offerPrice) > Number(product.price))
+      return toast.error(
+        "Selling price cannot be greater than original price."
+      );
+
+    if (product.variants.length === 0)
+      return toast.error("Please add at least one variant.");
+
+    for (const variant of product.variants) {
+      if (!variant.color.name.trim())
+        return toast.error("Variant color is required.");
+
+      if (variant.images.length === 0)
+        return toast.error(
+          `${variant.color.name || "Variant"} needs at least one image.`
+        );
+
+      if (variant.sizes.length === 0)
+        return toast.error(
+          `${variant.color.name || "Variant"} needs at least one size.`
+        );
+
+      for (const size of variant.sizes) {
+        if (!size.size)
+          return toast.error(
+            `Please enter a size for ${variant.color.name}.`
+          );
+
+        if (size.stock < 0)
+          return toast.error("Stock cannot be negative.");
+      }
+    }
+
+    return true;
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-      window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
 
-  
+    if (validate() !== true) return;
 
-    if (!formData.name.trim()) {
-      return toast.error("Product name is required.");
-    }
-
-    if (!formData.brand.trim()) {
-      return toast.error("Brand is required.");
-    }
-
-    if (!formData.category) {
-      return toast.error("Please select a category.");
-    }
-
-    if (!formData.price) {
-      return toast.error("Price is required.");
-    }
-
-    if (!formData.offerPrice) {
-      return toast.error("Offer price is required.");
-    }
-
-    if (Number(formData.offerPrice) > Number(formData.price)) {
-      return toast.error(
-        "Offer price cannot be greater than price."
-      );
-    }
-
-    if (
-      existingImages.length === 0 &&
-      images.length === 0
-    ) {
-      return toast.error(
-        "Please upload at least one product image."
-      );
-    }
-
-    onSubmit(
-      {
-        ...formData,
-        images: existingImages,
-      },
-      images,
-      deletedImages
-    );
+    onSubmit(product);
   };
 
   return (
     <div className="relative">
-{loading && (
-  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/60 backdrop-blur-sm">
-    <div className="w-[300px] rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
-      <div className="flex flex-col items-center">
-        <div className="relative flex h-16 w-16 items-center justify-center">
-          <div className="absolute h-16 w-16 animate-ping rounded-full bg-emerald-100 opacity-40"></div>
+      {loading && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/70 backdrop-blur-sm">
+          <div className="w-[320px] rounded-2xl border bg-white p-6 shadow-xl">
+            <div className="flex flex-col items-center">
+              <Loader2 className="h-10 w-10 animate-spin text-emerald-600" />
 
-          <div className="absolute h-16 w-16 animate-spin rounded-full border-[3px] border-slate-200 border-t-emerald-600"></div>
+              <h3 className="mt-4 text-lg font-semibold">
+                {initialData
+                  ? "Updating Product"
+                  : "Creating Product"}
+              </h3>
 
-          <Loader2 className="h-7 w-7 animate-spin text-emerald-600" />
+              <p className="mt-2 text-center text-sm text-slate-500">
+                Please wait while we save your product.
+              </p>
+            </div>
+          </div>
         </div>
+      )}
 
-        <h3 className="mt-5 text-lg font-semibold text-slate-900">
-          {initialData?._id ? "Updating Product" : "Creating Product"}
-        </h3>
+      <form onSubmit={handleSubmit}>
+        <fieldset
+          disabled={loading}
+          className={`transition-all ${
+            loading ? "opacity-70" : ""
+          }`}
+        >
+          <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
+            {/* Left Column */}
+            <div className="space-y-6">
+              <BasicInformation
+                product={product}
+                setProduct={setProduct}
+              />
 
-        <p className="mt-2 text-center text-sm text-slate-500">
-          {initialData?._id
-            ? "Saving your changes..."
-            : "Uploading images and creating your product..."}
-        </p>
-      </div>
-    </div>
-  </div>
-)}
+              <PricingSection
+                product={product}
+                setProduct={setProduct}
+              />
 
-    <form
-      onSubmit={submitHandler}
-      className="space-y-6"
-    >
-<fieldset
-  disabled={loading}
-  className={`space-y-6 transition-all duration-300 ${
-    loading ? "opacity-70" : "opacity-100"
-  }`}
->
-  {/* Basic Information */}
+              <ProductDetailss
+                product={product}
+                setProduct={setProduct}
+              />
 
-  <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-    <h2 className="mb-4 text-lg font-semibold text-slate-900">
-      Basic Information
-    </h2>
+              <VariantSection
+                product={product}
+                setProduct={setProduct}
+              />
 
-    <div className="grid gap-4 lg:grid-cols-2">
-      <Input
-        name="name"
-        placeholder="Product Name"
-        value={formData.name}
-        onChange={handleChange}
-        className="h-11"
-      />
+              {/* <SeoSection
+                product={product}
+                setProduct={setProduct}
+              /> */}
+            </div>
 
-      <Input
-        name="brand"
-        placeholder="Brand"
-        value={formData.brand}
-        onChange={handleChange}
-        className="h-11"
-      />
+            {/* Right Column */}
+            <div>
+              <ProductPreview product={product} />
+            </div>
+          </div>
 
-      <select
-        name="category"
-        value={formData.category}
-        onChange={handleChange}
-        className="h-11 rounded-xl border border-input bg-background px-3 text-sm outline-none focus:border-emerald-500"
-      >
-        <option value="">Select Category</option>
+          <div className="sticky bottom-0 mt-8 border-t bg-white/95 px-6 py-4 backdrop-blur">
+            <div className="flex justify-end gap-3">
+              <Button
+                type="button"
+                variant="outline"
+              >
+                Cancel
+              </Button>
 
-        {categories.map((category) => (
-          <option
-            key={category}
-            value={category.toLowerCase()}
-          >
-            {category}
-          </option>
-        ))}
-      </select>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="min-w-[180px]"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
 
-      <Input
-        type="number"
-        name="stock"
-        placeholder="Stock Quantity"
-        value={formData.stock}
-        onChange={handleChange}
-        className="h-11"
-        min={0}
-      />
-    </div>
-
-    <Textarea
-      rows={4}
-      name="description"
-      placeholder="Product Description"
-      value={formData.description}
-      onChange={handleChange}
-      className="mt-4 resize-none"
-    />
-  </div>
-
-  {/* Pricing */}
-
-  <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-    <h2 className="mb-4 text-lg font-semibold text-slate-900">
-      Pricing
-    </h2>
-
-    <div className="grid gap-4 md:grid-cols-2">
-      <Input
-        type="number"
-        name="price"
-        placeholder="Original Price"
-        value={formData.price}
-        onChange={handleChange}
-        className="h-11"
-      />
-
-      <Input
-        type="number"
-        name="offerPrice"
-        placeholder="Selling Price"
-        value={formData.offerPrice}
-        onChange={handleChange}
-        className="h-11"
-      />
-    </div>
-  </div>
-
-  {/* Sizes */}
-
-  <SizeSelector
-    value={formData.sizes}
-    onChange={(sizes) =>
-      setFormData((prev) => ({
-        ...prev,
-        sizes,
-      }))
-    }
-  />
-
-  {/* Colors */}
-
-  <ColorSelector
-    value={formData.colors}
-    onChange={(colors) =>
-      setFormData((prev) => ({
-        ...prev,
-        colors,
-      }))
-    }
-  />
-
-  {/* Images */}
-
-  <ImageUploader
-    existingImages={existingImages}
-    setExistingImages={setExistingImages}
-    deletedImages={deletedImages}
-    setDeletedImages={setDeletedImages}
-    images={images}
-    setImages={setImages}
-  />
-
-  {/* Footer */}
-
-  <div className="sticky bottom-0 z-20 -mx-5 rounded-b-2xl border-t border-slate-200 bg-white/95 px-5 py-4 backdrop-blur supports-[backdrop-filter]:bg-white/80">
-    <div className="flex justify-end">
-      <Button
-        type="submit"
-        disabled={loading}
-        className="h-11 w-full rounded-xl bg-emerald-600 text-white transition-all hover:bg-emerald-700 sm:w-auto sm:min-w-44"
-      >
-        {loading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            {initialData?._id
-              ? "Updating Product..."
-              : "Creating Product..."}
-          </>
-        ) : initialData?._id ? (
-          "Update Product"
-        ) : (
-          "Create Product"
-        )}
-      </Button>
-    </div>
-  </div>
-</fieldset>
-    </form>
+                    {initialData
+                      ? "Updating..."
+                      : "Publishing..."}
+                  </>
+                ) : initialData ? (
+                  "Update Product"
+                ) : (
+                  "Publish Product"
+                )}
+              </Button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
     </div>
   );
 }

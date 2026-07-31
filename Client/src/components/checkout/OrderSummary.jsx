@@ -9,6 +9,7 @@ import OrderSuccessDialog from "./OrderSuccessDialog";
 import ButtonLoader from "../loading/ButtonLoader";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import ColorSwatch from "../product/ColorSwatch";
 
 export default function OrderSummary({ address, delivery, payment }) {
   const Navigate = useNavigate();
@@ -98,6 +99,7 @@ ${address.state} - ${address.pincode}`,
 Product : ${item.product.name}
 Quantity : ${item.quantity}
 Size : ${item.size ?? "-"}
+Color : ${item.color ?? "-"}
 Price : ₹${item.product.offerPrice ?? item.product.price}
 `,
         )
@@ -158,8 +160,14 @@ Price : ₹${item.product.offerPrice ?? item.product.price}
             cartItems.map((item) => {
               const product = item.product || {};
 
+           const currentVariant = product.variants?.find(
+  (variant) => variant._id === item.variantId
+);
+
               const image =
-                product.images?.[0]?.url || "https://placehold.co/80x80";
+                currentVariant?.images?.[0]?.url ||
+                product.variants?.[0]?.images?.[0]?.url ||
+                "https://placehold.co/80x80";
 
               const price = product.offerPrice ?? product.price ?? 0;
 
@@ -185,6 +193,13 @@ Price : ₹${item.product.offerPrice ?? item.product.price}
                         Size : {item.size}
                       </p>
                     )}
+                 {currentVariant?.color && (
+  <ColorSwatch
+    swatches={currentVariant.color.swatches}
+    title={currentVariant.color.name}
+    size="h-3 w-3"
+  />
+)}
                   </div>
 
                   <span className="text-sm font-semibold">

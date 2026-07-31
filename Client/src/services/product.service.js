@@ -15,6 +15,7 @@ const buildParams = ({
     sort,
   };
 
+
   if (search.trim()) {
     params.search = search.trim();
   }
@@ -46,7 +47,9 @@ const buildParams = ({
   if (filters.inStock) {
     params.inStock = true;
   }
-
+if (filters.bestseller) {
+    params.bestseller = true;
+  }
   return params;
 };
 
@@ -70,11 +73,7 @@ export const getRelatedProducts = async (id) => {
 };
 
 export const createProduct = async (formData) => {
-  const { data } = await axiosInstance.post(API, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const { data } = await axiosInstance.post(API, formData);
 
   return data;
 };
