@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   getProducts,
   getProduct,
+  getTrendingProducts,
 } from "@/services/product.service";
 
 const initialFilters = {
@@ -136,19 +137,14 @@ trendingLoading: false,
 },
 
 fetchTrendingProducts: async () => {
+  if (get().trendingProducts.length) return;
+
   set({
     trendingLoading: true,
-    error: null,
   });
 
   try {
-    const res = await getProducts({
-      page: 1,
-      limit: 8,
-      filters: {
-        bestseller: true,
-      },
-    });
+    const res = await getTrendingProducts();
 
     set({
       trendingProducts: res.products,
@@ -159,7 +155,6 @@ fetchTrendingProducts: async () => {
       trendingLoading: false,
       error:
         error.response?.data?.message ||
-        error.message ||
         "Unable to load trending products.",
     });
   }

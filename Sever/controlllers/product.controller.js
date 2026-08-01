@@ -702,3 +702,50 @@ export const getRelatedProducts = async (req, res) => {
   }
 };
 
+export const getTrendingProducts = async (req, res) => {
+  try {
+    const products = await Product.find({
+      bestseller: true,
+      active: true,
+    })
+      .sort({ createdAt: -1 })
+      .limit(4)
+      .lean();
+
+    const formattedProducts = products.map((product) => ({
+      _id: product._id,
+      name: product.name,
+      brand: product.brand,
+      price: product.price,
+      offerPrice: product.offerPrice,
+      createdAt: product.createdAt,
+
+      image:
+        product.variants?.[0]?.images?.[0]?.url || "",
+
+      totalStock: product.variants.reduce(
+        (total, variant) =>
+          total +
+          variant.sizes.reduce(
+            (sum, size) => sum + size.stock,
+            0
+          ),
+        0
+      ),
+
+      variants: product.variants.map((variant) => ({
+        color: variant.color,
+      })),
+    }));
+
+    res.json({
+      success: true,
+      products: formattedProducts,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to load trending products.",
+    });
+  }
+};

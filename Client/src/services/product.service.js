@@ -100,3 +100,10 @@ export const updateStock = async (id, inStock) => {
 
   return data;
 };
+export const getTrendingProducts = async () => {
+  const { data } = await axiosInstance.get(
+    "/products/trending"
+  );
+
+  return data;
+};

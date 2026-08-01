@@ -1,22 +1,24 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import TrendingProductCard from "./TrendingProductCard";
 import { Button } from "@/components/ui/button";
 
 import useProductStore from "@/store/productStore";
 
 export default function TrendingProducts() {
-  const products = useProductStore((state) => state.products);
-  const loading = useProductStore((state) => state.loading);
+ const products =
+useProductStore(
+state=>state.trendingProducts
+);
+
+const loading =
+useProductStore(
+state=>state.trendingLoading
+);
   const error = useProductStore((state) => state.error);
 
-const trendingProducts = products
-  .filter(
-    (product) => product.inStock && product.bestseller
-  )
-  .slice(0, 4);
   
 const messages = [
   "👟 Preparing your sneakers...",
@@ -125,7 +127,7 @@ useEffect(() => {
         ) : (
           <>
             <div className="grid  gap-6 grid-cols-2 lg:grid-cols-4">
-              {trendingProducts.map((product) => (
+              {products.map((product) => (
                 <motion.div
                   key={product._id}
                   initial={{ opacity: 0, y: 40 }}

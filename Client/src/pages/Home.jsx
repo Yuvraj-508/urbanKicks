@@ -26,13 +26,15 @@ import useProductStore from "@/store/productStore";
 
 export default function Home() {
   const initialized = useProductStore((state) => state.initialized);
-  const fetchProducts = useProductStore((state) => state.fetchProducts);
-
+const fetchTrendingProducts =
+  useProductStore(
+    (state) => state.fetchTrendingProducts
+  );
   useEffect(() => {
     if (!initialized) {
-      fetchProducts();
+      fetchTrendingProducts();
     }
-  }, [initialized, fetchProducts]);
+  }, [initialized, fetchTrendingProducts]);
 
   return (
     <>

@@ -10,6 +10,7 @@ import {
   getProductById,
   updateProduct,
   getRelatedProducts,
+  getTrendingProducts,
   // getTrendingProducts,
 } from "../controlllers/product.controller.js";
 
@@ -25,7 +26,7 @@ router.post(
 );
 
 router.get("/", getProducts);
-// router.get("/trending", getTrendingProducts);
+router.get("/trending", getTrendingProducts);
 router.get("/related/:id", getRelatedProducts);
 
 router.get("/:id", getProductById);
