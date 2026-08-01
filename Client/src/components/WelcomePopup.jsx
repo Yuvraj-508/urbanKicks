@@ -14,6 +14,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Suspense } from "react";
 
 export default function WelcomePopup() {
   const [open, setOpen] = useState(false);
@@ -69,48 +70,40 @@ export default function WelcomePopup() {
     }
   };
 
-  const finish = (showConfetti = true) => {
-    const finalName = savedName || name.trim();
+const finish = (showConfetti = true) => {
+  clearTimeout(closeTimerRef.current);
 
-    // Only set expiry if the user has a name
-    if (finalName) {
-      localStorage.setItem("uk_user_name", finalName);
-      localStorage.setItem("uk_welcome", "true");
-      localStorage.setItem(
-        "uk_welcome_expiry",
-        (Date.now() + 4 * 60 * 60 * 1000).toString(),
-      );
-    }
+  const finalName = savedName || name.trim();
 
-    if (showConfetti && finalName) {
-      setCelebrate(true);
+  if (finalName) {
+    localStorage.setItem("uk_user_name", finalName);
+    localStorage.setItem("uk_welcome", "true");
+    localStorage.setItem(
+      "uk_welcome_expiry",
+      (Date.now() + 4 * 60 * 60 * 1000).toString()
+    );
+  }
 
-      setTimeout(() => {
-        setCelebrate(false);
-        setOpen(false);
-      }, 2000);
-    } else {
-      setOpen(false);
-    }
-  };
+if (showConfetti && finalName) {
+  setCelebrate(true);
+
+  setTimeout(() => {
+    setOpen(false);
+  }, 300);
+
+  setTimeout(() => {
+    setCelebrate(false);
+  }, 2000);
+} else {
+  setOpen(false);
+}
+};
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div>
-          {celebrate && (
-            <Confetti
-              recycle={false}
-              numberOfPieces={280}
-              width={window.innerWidth}
-              height={window.innerHeight}
-              style={{
-                position: "fixed",
-                inset: 0,
-                zIndex: 9999,
-              }}
-            />
-          )}
+   
 
           <motion.div
             initial={{ opacity: 0 }}
@@ -283,6 +276,21 @@ export default function WelcomePopup() {
           </motion.div>
         </motion.div>
       )}
+       <Suspense fallback={null}>
+  {celebrate && (
+    <Confetti
+      recycle={false}
+      numberOfPieces={280}
+      width={window.innerWidth}
+      height={window.innerHeight}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+      }}
+    />
+  )}
+</Suspense>
     </AnimatePresence>
   );
 }
