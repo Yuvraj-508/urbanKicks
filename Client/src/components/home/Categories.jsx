@@ -5,28 +5,28 @@ const categories = [
     title: "Sneakers",
     subtitle: "Everyday style",
     image:
-      "https://images.unsplash.com/photo-1543508282-6319a3e2621f",
+      "/categories/sneakers.webp",
     link: "/all-products?category=sneakers",
   },
   {
     title: "Sports",
     subtitle: "High-performance footwear",
     image:
-      "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519",
+      "/categories/sports.webp",
     link: "/all-products?category=sports",
   },
   {
     title: "Boots",
     subtitle: "Rugged & durable",
     image:
-      "https://images.unsplash.com/photo-1549298916-b41d501d3772",
+      "/categories/boots.webp",
     link: "/all-products?category=boots",
   },
   {
     title: "Casual",
     subtitle: "Comfort for every day",
     image:
-      "https://images.unsplash.com/photo-1491553895911-0055eca6402d",
+      "/categories/casual.webp",
     link: "/all-products?category=casual",
   },
 ];

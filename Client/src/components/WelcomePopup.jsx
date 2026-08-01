@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Confetti from "react-confetti";
+const Confetti = lazy(() =>
+    import("react-confetti")
+);
 import {
   Sparkles,
   Footprints,
@@ -52,7 +54,7 @@ export default function WelcomePopup() {
         closeTimerRef.current = setTimeout(() => {
           finish(false);
         }, 20000);
-      }, 500);
+      }, 2500);
     }
 
     return () => {
@@ -146,8 +148,9 @@ export default function WelcomePopup() {
               {/* Floating Sneaker */}
 
               <motion.img
-                src="/images/hero-shoe.png"
+                src="/images/hero-shoe.webp"
                 alt="Sneaker"
+                 loading="lazy"
                 animate={{
                   y: [0, -12, 0],
                   rotate: [-18, -15, -18],

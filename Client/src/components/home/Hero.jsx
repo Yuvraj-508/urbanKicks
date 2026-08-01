@@ -121,7 +121,7 @@ export default function Hero() {
             <div className="absolute inset-0 rounded-full bg-emerald-300 blur-[60px] opacity-50 sm:blur-[90px] lg:blur-[120px]" />
 
             <img
-              src="/images/hero-shoe.png"
+              src="/images/hero-shoe.webp"
               alt="Urban Kicks Sneaker"
               loading="eager"
               decoding="async"
