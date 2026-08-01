@@ -162,20 +162,30 @@
     @apply font-sans;
     }
 }
-
 @keyframes marquee {
   from {
-    transform: translateX(0%);
+    transform: translateX(40%);
   }
 
   to {
-    transform: translateX(-50%);
+    transform: translateX(-100%);
   }
 }
 
 .animate-marquee {
-  animation: marquee 22s linear infinite;
-  width: max-content;
+  animation: marquee 25s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Slower on mobile */
+@media (max-width: 640px) {
+  .animate-marquee {
+    animation-duration: 45s;
+  }
 }
 html,
 body {
