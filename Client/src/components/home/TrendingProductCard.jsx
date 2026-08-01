@@ -3,6 +3,7 @@ import { Heart, ShoppingBag, Eye, Star } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import ColorSwatch from "../product/ColorSwatch";
+import { optimizeCloudinaryImage } from "@/lib/cloudinary";
 
 export default function TrendingProductCard({ product }) {
   const {
@@ -30,7 +31,9 @@ export default function TrendingProductCard({ product }) {
 
   const firstVariant = variants?.[0];
 
-  const image = firstVariant?.images?.[0]?.url || "/placeholder.png";
+  const image =
+    optimizeCloudinaryImage(firstVariant?.images?.[0]?.url, 500, 500) ||
+    "/placeholder.png";
 
   return (
     <motion.article
@@ -46,6 +49,8 @@ export default function TrendingProductCard({ product }) {
             src={image}
             alt={name}
             loading="lazy"
+            decoding="async"
+            fetchPriority="low"
             className="aspect-square w-full object-cover object-center transition duration-500 group-hover:scale-105"
           />
         </Link>
@@ -113,22 +118,22 @@ sm:left-4 sm:top-14 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text
             </h3>
           </Link>
         </div>
-    <div className="flex items-center gap-2">
-  {variants?.slice(0, 5).map((variant, index) => (
-    <ColorSwatch
-      key={variant._id || index}
-      swatches={variant.color?.swatches}
-      title={variant.color?.name}
-      size="h-4 w-4"
-    />
-  ))}
+        <div className="flex items-center gap-2">
+          {variants?.slice(0, 5).map((variant, index) => (
+            <ColorSwatch
+              key={variant._id || index}
+              swatches={variant.color?.swatches}
+              title={variant.color?.name}
+              size="h-4 w-4"
+            />
+          ))}
 
-  {variants?.length > 5 && (
-    <span className="text-xs text-slate-500">
-      +{variants.length - 5}
-    </span>
-  )}
-</div>
+          {variants?.length > 5 && (
+            <span className="text-xs text-slate-500">
+              +{variants.length - 5}
+            </span>
+          )}
+        </div>
         {/* Rating */}
 
         <div className=" hidden lg:flex  items-center gap-2">

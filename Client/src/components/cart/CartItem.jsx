@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import useCartStore from "@/store/cartStore";
 import { Badge } from "../ui/badge";
 import ColorSwatch from "../product/ColorSwatch";
+import { optimizeCloudinaryImage } from "@/lib/cloudinary";
 
 export default function CartItem({ item }) {
   const updateQuantity = useCartStore((state) => state.updateQuantity);
@@ -19,10 +20,12 @@ export default function CartItem({ item }) {
     product.variants?.find((variant) => variant._id === item.variantId) ||
     product.variants?.[0];
 
-  const image =
-    currentVariant?.images?.[0]?.url ||
-    product.variants?.[0]?.images?.[0]?.url ||
-    "/placeholder.png";
+const image = optimizeCloudinaryImage(
+  currentVariant?.images?.[0]?.url ||
+    product.variants?.[0]?.images?.[0]?.url,
+  200,
+  200
+) || "/placeholder.png";
 
   const increaseQty = () => {
     updateQuantity(item.id, item.quantity + 1);
@@ -46,11 +49,15 @@ export default function CartItem({ item }) {
         {/* Product Image */}
 
         <div className="flex h-28 w-28 flex-shrink-0 items-center justify-center rounded-xl bg-slate-100">
-          <img
-            src={image}
-            alt={product.name}
-            className="h-24 w-24 object-contain transition duration-300 group-hover:scale-105"
-          />
+    <img
+  src={image}
+  alt={product.name}
+  loading="lazy"
+  decoding="async"
+  width={96}
+  height={96}
+  className="h-24 w-24 object-contain transition duration-300 group-hover:scale-105"
+/>
         </div>
 
         {/* Right */}
@@ -163,6 +170,10 @@ export default function CartItem({ item }) {
           <img
             src={image}
             alt={product.name}
+            loading="lazy"
+            decoding="async"
+            width={128}
+            height={128}
             className="h-32 w-32 object-contain"
           />
         </div>

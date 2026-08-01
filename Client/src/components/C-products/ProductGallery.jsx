@@ -1,3 +1,4 @@
+import { optimizeCloudinaryImage } from "@/lib/cloudinary";
 import { useEffect, useState } from "react";
 
 export default function ProductGallery({
@@ -8,9 +9,10 @@ export default function ProductGallery({
     product?.variants?.[selectedVariant] ||
     product?.variants?.[0];
 
-  const images =
-    currentVariant?.images?.map((img) => img.url) || [];
-
+ const images =
+  currentVariant?.images?.map((img) =>
+    optimizeCloudinaryImage(img.url, 900, 900)
+  ) || [];
   const [selectedImage, setSelectedImage] = useState("");
   
 useEffect(() => {
@@ -20,8 +22,7 @@ useEffect(() => {
     setSelectedImage("");
   }
 }, [selectedVariant]);
-console.log("Selected Variant:", selectedVariant);
-console.log("Current Variant:", currentVariant);
+
   // ✅ return AFTER hooks
   if (!product) return null;
 
@@ -34,6 +35,10 @@ console.log("Current Variant:", currentVariant);
           <img
             src={selectedImage}
             alt={product.name}
+              loading="eager"
+  fetchPriority="high"
+  decoding="async"
+
             className="max-h-full max-w-full object-contain transition duration-300 hover:scale-105"
           />
         ) : (
@@ -60,6 +65,8 @@ console.log("Current Variant:", currentVariant);
             >
               <img
                 src={image}
+                  loading="lazy"
+  decoding="async"
                 alt={`${product.name} ${index + 1}`}
                 className="h-16 w-full object-contain"
               />

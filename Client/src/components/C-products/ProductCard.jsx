@@ -4,6 +4,7 @@ import { Heart, ShoppingBag, Eye, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useCartStore from "@/store/cartStore";
 import ColorSwatch from "../product/ColorSwatch";
+import { optimizeCloudinaryImage } from "@/lib/cloudinary";
 
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
@@ -14,9 +15,12 @@ export default function ProductCard({ product }) {
 
   const images = firstVariant?.images || [];
 
-  const image = images[0]?.url || "/images/placeholder.png";
+const image =
+  optimizeCloudinaryImage(images[0]?.url, 600, 600) ||
+  "/images/placeholder.png";
 
-  const secondImage = images[1]?.url || image;
+const secondImage =
+  optimizeCloudinaryImage(images[1]?.url, 600, 600) || image;
 
   const colors = product.variants || [];
 
@@ -130,6 +134,9 @@ export default function ProductCard({ product }) {
         <img
           src={image}
           alt={product.name}
+            loading="lazy"
+  decoding="async"
+  fetchPriority="low"
           className={` w-full  object-contain p-4 transition duration-500 ${
             images.length > 1
               ? "group-hover:scale-105 group-hover:opacity-0"
@@ -140,6 +147,9 @@ export default function ProductCard({ product }) {
           <img
             src={secondImage}
             alt={product.name}
+              loading="lazy"
+  decoding="async"
+  fetchPriority="low"
             className="absolute inset-0  w-full object-contain p-4 opacity-0 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
           />
         )}
