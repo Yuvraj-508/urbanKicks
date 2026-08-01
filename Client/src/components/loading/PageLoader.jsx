@@ -29,7 +29,7 @@ export default function PageLoader({
         {/* Floating Shoe */}
 
         <motion.img
-          src="/images/hero-shoe.png"
+          src="/images/hero-shoe.webp"
           alt="Loading"
           animate={{ y: [0, -12, 0] }}
           transition={{

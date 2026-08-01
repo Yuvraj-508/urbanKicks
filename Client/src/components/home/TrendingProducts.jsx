@@ -71,7 +71,7 @@ useEffect(() => {
     <div className="mb-10 flex flex-col items-center justify-center">
       <div className="relative">
         <img
-          src="/images/hero-shoe.png"
+          src="/images/hero-shoe.webp"
           alt="Loading"
           className="h-28 w-28 animate-bounce object-contain"
         />
