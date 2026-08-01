@@ -8,7 +8,6 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-
     visualizer({
       filename: "./dist/stats.html",
       open: true,
@@ -24,28 +23,32 @@ export default defineConfig({
   },
 
   build: {
-    chunkSizeWarningLimit: 800,
-
     rollupOptions: {
       output: {
-    manualChunks(id) {
-  if (id.includes("node_modules")) {
-    if (id.includes("@base-ui/react")) return "ui";
+        manualChunks: {
+          react: [
+            "react",
+            "react-dom",
+            "react-router-dom",
+          ],
 
-    if (id.includes("framer-motion")) return "motion";
+          motion: [
+            "framer-motion",
+          ],
 
-    if (id.includes("lucide-react")) return "icons";
+          ui: [
+            "@base-ui/react",
+          ],
 
-    if (id.includes("axios")) return "axios";
+          icons: [
+            "lucide-react",
+          ],
 
-    if (
-      id.includes("react-router")
-    )
-      return "router";
-
-    return "vendor";
-  }
-},
+          utils: [
+            "axios",
+            "zustand",
+          ],
+        },
       },
     },
   },

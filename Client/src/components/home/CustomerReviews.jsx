@@ -9,9 +9,6 @@ import Re4 from "../../assets/re5.jpeg";
 import Re5 from "../../assets/re6.jpeg";
 import Re6 from "../../assets/re7.jpeg";
 
-export default function CustomerReviews() {
-  const [pause, setPause] = useState(false);
-
   const reviews = [
     {
       id: 1,
@@ -68,6 +65,10 @@ export default function CustomerReviews() {
         "Super comfortable with outstanding support. Highly recommended.",
     },
   ];
+const displayReviews=[...reviews,...reviews];
+export default function CustomerReviews() {
+  const [pause, setPause] = useState(false);
+
 
   return (
     <section className="lg:py-20 py-6 bg-white overflow-hidden">
@@ -120,18 +121,19 @@ export default function CustomerReviews() {
               animationPlayState: pause ? "paused" : "running",
             }}
           >
-            {[...reviews, ...reviews].map((review, index) => (
-                              <motion.div
-                key={`${review.id}-${index}`}
-                whileHover={{ y: -8 }}
-                transition={{ duration: 0.25 }}
-                className="group relative h-[390px] w-[280px] flex-shrink-0 overflow-hidden rounded-3xl bg-slate-200 shadow-lg"
-              >
+            {[...displayReviews].map((review, index) => (
+              <div
+className="group relative h-[390px] w-[280px] flex-shrink-0 overflow-hidden rounded-3xl bg-slate-200 shadow-lg transition-transform duration-300 hover:-translate-y-2"
+>
                 {/* Image */}
 
                 <img
-                  src={review.image}
-                  alt={review.name}
+             
+src={review.image}
+alt={review.name}
+loading="lazy"
+decoding="async"
+fetchPriority="low"
                   className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
                 />
 
@@ -193,7 +195,7 @@ export default function CustomerReviews() {
 
                 </div>
 
-              </motion.div>
+              </div>
             ))}
 
           </div>
