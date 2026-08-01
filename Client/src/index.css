@@ -184,7 +184,7 @@
 /* Slower on mobile */
 @media (max-width: 640px) {
   .animate-marquee {
-    animation-duration: 45s;
+    animation-duration: 35s;
   }
 }
 html,

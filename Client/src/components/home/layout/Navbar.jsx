@@ -99,41 +99,49 @@ export default function Navbar() {
   return (
     <>
       {/* Announcement */}
-      <div
-        className="fixed inset-x-0 top-0 z-[40] hidden h-10 items-center justify-center bg-slate-950 text-white lg:flex"
-        style={{ paddingTop: "env(safe-area-inset-top)" }}
-      >
+<div
+className="fixed top-0 left-0 right-0 z-[60] h-7 lg:h-11 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 border-b border-emerald-900"
 
+>
+  <div className="mx-auto flex h-full max-w-7xl items-center px-3">
+    <Megaphone className="mr-3 h-4 w-4 shrink-0 text-emerald-400" />
 
-<div className="flex items-center overflow-hidden  px-3 py-2">
-  <Megaphone className="mr-3 h-4 w-4 shrink-0  text-red-600" />
+    <div className="relative flex-1 overflow-hidden">
+      <div className="flex w-max animate-marquee whitespace-nowrap">
+        <span className="mr-24 text-xs font-medium text-slate-200">
+          <span className="font-bold text-emerald-400">
+            ⚡ Premium UA+ Collection
+          </span>
+          {" "}• Free Shipping above ₹999 • 7-Day Easy Returns • Carefully read
+          the product description before ordering • Welcome to{" "}
+          <span className="font-semibold text-white">
+            Urban Kicks
+          </span>{" "}
+          👟
+        </span>
 
-  <div className="relative flex-1 overflow-hidden">
-    <div className="flex w-max animate-marquee whitespace-nowrap">
-      <span className="mr-16 text-xs font-medium text-white sm:text-sm">
-         <span className="text-red-500 mr-1">Please Note :</span> 
-        Our products are premium UA+ quality and are not official brand
-        releases. Kindly review the product carefully before
-        placing your order.  Welcome to Urban Kicks • Premium  shopping with us! 👟
-      </span>
-      <span
-        className="mr-16 text-xs font-medium text-white sm:text-sm"
-        aria-hidden="true"
-      >
-      <span className="text-red-500 mr-1">Please Note :</span> 
-        Our products are premium UA+ quality and are not official brand
-        releases. Kindly review the product carefully before
-        placing your order.  Welcome to Urban Kicks • Premium  shopping with us! 👟
-      </span>
-
+        <span
+          aria-hidden
+          className="mr-24 text-xs font-medium text-slate-200"
+        >
+          <span className="font-bold text-emerald-400">
+            ⚡ Premium UA+ Collection
+          </span>
+          {" "}• Free Shipping above ₹999 • 7-Day Easy Returns • Carefully read
+          the product description before ordering • Welcome to{" "}
+          <span className="font-semibold text-white">
+            Urban Kicks
+          </span>{" "}
+          👟
+        </span>
+      </div>
     </div>
   </div>
 </div>
-      </div>
 
       <header
         style={{ paddingTop: "env(safe-area-inset-top)" }}
-        className={`fixed inset-x-0 z-10 transition-[height,background-color,box-shadow] duration-200 ease-out ${
+        className={`fixed inset-x-0 z-10 mt-2 transition-[height,background-color,box-shadow] duration-200 ease-out ${
           scrolled
             ? "top-0 lg:top-10 h-[68px] border-b bg-white/90 backdrop-blur-xl shadow"
             : "top-0 lg:top-10 h-[82px] bg-transparent"
