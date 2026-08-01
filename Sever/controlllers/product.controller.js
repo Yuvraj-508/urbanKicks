@@ -712,40 +712,43 @@ export const getTrendingProducts = async (req, res) => {
       .limit(4)
       .lean();
 
-    const formattedProducts = products.map((product) => ({
-      _id: product._id,
-      name: product.name,
-      brand: product.brand,
-      price: product.price,
-      offerPrice: product.offerPrice,
-      createdAt: product.createdAt,
+    const formattedProducts = products.map((product) => {
+      const variants = product.variants || [];
 
-      image:
-        product.variants?.[0]?.images?.[0]?.url || "",
-
-      totalStock: product.variants.reduce(
-        (total, variant) =>
-          total +
-          variant.sizes.reduce(
-            (sum, size) => sum + size.stock,
+      const totalStock = variants.reduce((productTotal, variant) => {
+        return (
+          productTotal +
+          (variant.sizes || []).reduce(
+            (variantTotal, size) =>
+              variantTotal + (size.stock || 0),
             0
-          ),
-        0
-      ),
+          )
+        );
+      }, 0);
 
-      variants: product.variants.map((variant) => ({
-        color: variant.color,
-      })),
-    }));
+      return {
+        ...product,
 
-    res.json({
+        image: variants[0]?.images?.[0]?.url || "",
+
+        totalStock,
+
+        inStock: totalStock > 0,
+
+        totalVariants: variants.length,
+      };
+    });
+
+    return res.status(200).json({
       success: true,
       products: formattedProducts,
     });
-  } catch (err) {
-    res.status(500).json({
+  } catch (error) {
+    console.error("Get Trending Products Error:", error);
+
+    return res.status(500).json({
       success: false,
-      message: "Unable to load trending products.",
+      message: "Failed to fetch trending products.",
     });
   }
 };
