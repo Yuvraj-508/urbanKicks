@@ -17,6 +17,7 @@ export default function WelcomePopup() {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [celebrate, setCelebrate] = useState(false);
+  const [savedName, setSavedName] = useState("");
 
   const openTimerRef = useRef(null);
   const closeTimerRef = useRef(null);
@@ -24,42 +25,41 @@ export default function WelcomePopup() {
   const hour = new Date().getHours();
 
   const greeting =
-    hour < 12
-      ? "Good Morning"
-      : hour < 18
-      ? "Good Afternoon"
-      : "Good Evening";
+    hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
 
+  useEffect(() => {
+    const expiry = localStorage.getItem("uk_welcome_expiry");
+    const storedName = localStorage.getItem("uk_user_name") || "";
 
-useEffect(() => {
-  const seen = localStorage.getItem("uk_welcome");
-  const expiry = localStorage.getItem("uk_welcome_expiry");
+    setSavedName(storedName);
 
-  // If expired, remove old values
-  if (expiry && Date.now() > Number(expiry)) {
-    localStorage.removeItem("uk_welcome");
-    localStorage.removeItem("uk_welcome_expiry");
-  }
+    if (storedName) {
+      setName(storedName);
+    }
 
-  // Check again after removing expired data
-  const shouldShow = !localStorage.getItem("uk_welcome");
+    // remove expiry
+    if (expiry && Date.now() > Number(expiry)) {
+      localStorage.removeItem("uk_welcome");
+      localStorage.removeItem("uk_welcome_expiry");
+    }
 
-  if (shouldShow) {
-    openTimerRef.current = setTimeout(() => {
-      setOpen(true);
+    const shouldShow = !localStorage.getItem("uk_welcome");
 
-      closeTimerRef.current = setTimeout(() => {
-        finish(false);
-      }, 20000);
-    }, 500);
-  }
+    if (shouldShow) {
+      openTimerRef.current = setTimeout(() => {
+        setOpen(true);
 
-  return () => {
-    clearTimeout(openTimerRef.current);
-    clearTimeout(closeTimerRef.current);
-  };
-}, []);
+        closeTimerRef.current = setTimeout(() => {
+          finish(false);
+        }, 20000);
+      }, 500);
+    }
 
+    return () => {
+      clearTimeout(openTimerRef.current);
+      clearTimeout(closeTimerRef.current);
+    };
+  }, []);
 
   const stopAutoClose = () => {
     if (closeTimerRef.current) {
@@ -67,28 +67,30 @@ useEffect(() => {
     }
   };
 
-const finish = (showConfetti = true) => {
-  // Expires after 4 hours
-  const expiryTime = Date.now() + 4 * 60 * 60 * 1000;
+  const finish = (showConfetti = true) => {
+    const finalName = savedName || name.trim();
 
-  localStorage.setItem("uk_welcome", "true");
-  localStorage.setItem("uk_welcome_expiry", expiryTime.toString());
+    // Only set expiry if the user has a name
+    if (finalName) {
+      localStorage.setItem("uk_user_name", finalName);
+      localStorage.setItem("uk_welcome", "true");
+      localStorage.setItem(
+        "uk_welcome_expiry",
+        (Date.now() + 4 * 60 * 60 * 1000).toString(),
+      );
+    }
 
-  if (name.trim()) {
-    localStorage.setItem("uk_user_name", name.trim());
-  }
+    if (showConfetti && finalName) {
+      setCelebrate(true);
 
-  if (showConfetti && name.trim()) {
-    setCelebrate(true);
-
-    setTimeout(() => {
-      setCelebrate(false);
+      setTimeout(() => {
+        setCelebrate(false);
+        setOpen(false);
+      }, 2000);
+    } else {
       setOpen(false);
-    }, 2000);
-  } else {
-    setOpen(false);
-  }
-};
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -194,44 +196,67 @@ const finish = (showConfetti = true) => {
                 <p className="mx-auto mt-4 max-w-md text-center leading-7 text-slate-600">
                   Welcome to <strong>Urban Kicks</strong>.
                   <br />
-                  Discover premium sneakers designed for athletes,
-                  creators and everyday explorers.
+                  Discover premium sneakers designed for athletes, creators and
+                  everyday explorers.
                 </p>
 
                 {/* Input Card */}
 
                 <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                  <div className="mb-4 flex items-center gap-2">
-                    <Footprints className="h-5 w-5 text-emerald-600" />
+                  {savedName ? (
+                    <div className="text-center">
+                      <div className="mb-3 flex items-center justify-center gap-2">
+                        <Star className="h-5 w-5 text-emerald-600" />
+                        <span className="font-semibold">Welcome back!</span>
+                      </div>
 
-                    <span className="font-semibold">
-                      What should we call you?
-                    </span>
-                  </div>
+                      <h3 className="text-2xl font-bold text-slate-900">
+                        {savedName.toLocaleUpperCase()} 👋
+                      </h3>
 
-                  <Input
-                    value={name}
-                    placeholder="Enter your name..."
-                    className="h-12 rounded-xl border-slate-300 focus-visible:ring-emerald-500"
-                    onFocus={stopAutoClose}
-                    onChange={(e) => {
-                      stopAutoClose();
-                      setName(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        finish();
-                      }
-                    }}
-                  />
+                      <p className="mt-2 text-sm text-slate-500">
+                        Glad to see you again. Explore our latest premium
+                        sneakers.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="mb-4 flex items-center gap-2">
+                        <Footprints className="h-5 w-5 text-emerald-600" />
+
+                        <span className="font-semibold">
+                          What should we call you?
+                        </span>
+                      </div>
+
+                      <Input
+                        value={name}
+                        placeholder="Enter your name..."
+                        className="h-12 rounded-xl border-slate-300 focus-visible:ring-emerald-500"
+                        onFocus={stopAutoClose}
+                        onChange={(e) => setName(e.target.value.toUpperCase())}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            finish();
+                          }
+                        }}
+                      />
+                    </>
+                  )}
                 </div>
-                                {/* Buttons */}
+                {/* Buttons */}
 
                 <div className="mt-8 flex gap-3">
                   <Button
                     variant="outline"
                     className="h-12 flex-1 rounded-xl border-slate-300"
-                    onClick={() => finish(false)}
+                    onClick={() => {
+                      if (savedName) {
+                        finish(false);
+                      } else {
+                        setOpen(false); // Don't save anything
+                      }
+                    }}
                   >
                     Skip
                   </Button>
@@ -253,8 +278,7 @@ const finish = (showConfetti = true) => {
               </div>
             </motion.div>
           </motion.div>
-          </motion.div>
- 
+        </motion.div>
       )}
     </AnimatePresence>
   );

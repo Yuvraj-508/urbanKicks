@@ -164,7 +164,7 @@
 }
 @keyframes marquee {
   from {
-    transform: translateX(40%);
+    transform: translateX(20%);
   }
 
   to {
@@ -173,7 +173,7 @@
 }
 
 .animate-marquee {
-  animation: marquee 25s linear infinite;
+  animation: marquee 18s linear infinite;
   will-change: transform;
 }
 
@@ -184,7 +184,7 @@
 /* Slower on mobile */
 @media (max-width: 640px) {
   .animate-marquee {
-    animation-duration: 35s;
+    animation-duration: 16s;
   }
 }
 html,

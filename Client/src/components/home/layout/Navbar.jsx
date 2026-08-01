@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router";
-import { ChevronDown, Megaphone, Menu, ShoppingBag, Truck, User } from "lucide-react";
+import {
+  ChevronDown,
+  Megaphone,
+  Menu,
+  ShoppingBag,
+  Truck,
+  User,
+  X
+} from "lucide-react";
 import useCartStore from "@/store/cartStore";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -99,49 +107,40 @@ export default function Navbar() {
   return (
     <>
       {/* Announcement */}
-<div
-className="fixed top-0 left-0 right-0 z-[60] h-7 lg:h-11 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 border-b border-emerald-900"
+      <div className="fixed top-0 left-0 right-0 z-[60] h-6 lg:h-11 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 border-b border-emerald-900">
+        <div className="mx-auto flex h-full max-w-7xl items-center px-3">
+          <Megaphone className="mr-3 h-4 w-4 shrink-0 text-emerald-400" />
 
->
-  <div className="mx-auto flex h-full max-w-7xl items-center px-3">
-    <Megaphone className="mr-3 h-4 w-4 shrink-0 text-emerald-400" />
+          <div className="relative flex-1 overflow-hidden">
+            <div className="flex w-max animate-marquee whitespace-nowrap">
+              <span className="mr-24 text-xs font-medium text-slate-200">
+                <span className="font-bold text-emerald-400">
+                  ⚡ Premium UA+ Sneakers
+                </span>{" "}
+                Please note: We do not sell original or official branded shoes.
+                All products are premium UA+ quality • Welcome to{" "}
+                <span className="font-semibold text-white">Urban Kicks</span> 👟
+              </span>
 
-    <div className="relative flex-1 overflow-hidden">
-      <div className="flex w-max animate-marquee whitespace-nowrap">
-        <span className="mr-24 text-xs font-medium text-slate-200">
-          <span className="font-bold text-emerald-400">
-            ⚡ Premium UA+ Collection
-          </span>
-          {" "}• Free Shipping above ₹999 • 7-Day Easy Returns • Carefully read
-          the product description before ordering • Welcome to{" "}
-          <span className="font-semibold text-white">
-            Urban Kicks
-          </span>{" "}
-          👟
-        </span>
-
-        <span
-          aria-hidden
-          className="mr-24 text-xs font-medium text-slate-200"
-        >
-          <span className="font-bold text-emerald-400">
-            ⚡ Premium UA+ Collection
-          </span>
-          {" "}• Free Shipping above ₹999 • 7-Day Easy Returns • Carefully read
-          the product description before ordering • Welcome to{" "}
-          <span className="font-semibold text-white">
-            Urban Kicks
-          </span>{" "}
-          👟
-        </span>
+              <span
+                aria-hidden
+                className="mr-24 text-xs font-medium text-slate-200"
+              >
+                <span className="font-bold text-emerald-400">
+                  ⚡ Premium UA+ Sneakers
+                </span>{" "}
+                Please note: We do not sell original or official branded shoes.
+                All products are premium UA+ quality • Welcome to{" "}
+                <span className="font-semibold text-white">Urban Kicks</span> 👟
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
       <header
         style={{ paddingTop: "env(safe-area-inset-top)" }}
-        className={`fixed inset-x-0 z-10 mt-2 transition-[height,background-color,box-shadow] duration-200 ease-out ${
+        className={`fixed inset-x-0 z-20 mt-4 transition-[height,background-color,box-shadow] duration-200 ease-out ${
           scrolled
             ? "top-0 lg:top-10 h-[68px] border-b bg-white/90 backdrop-blur-xl shadow"
             : "top-0 lg:top-10 h-[82px] bg-transparent"
@@ -165,20 +164,32 @@ className="fixed top-0 left-0 right-0 z-[60] h-7 lg:h-11 bg-gradient-to-r from-s
 
               <SheetContent
                 side="left"
-                className="flex w-80 max-w-[85vw] flex-col overflow-y-auto p-0"
+                className="[&>button]:hidden w-80 max-w-[85vw] p-0 flex-col overflow-y-auto"
                 style={{
                   paddingTop: "env(safe-area-inset-top)",
                   paddingBottom: "env(safe-area-inset-bottom)",
                 }}
               >
-                <div className="border-b p-6">
-                  <h2 className="text-2xl font-black">URBAN</h2>
-                  <p className="text-xs font-bold tracking-[0.35em] text-emerald-600">
-                    KICKS
-                  </p>
-                </div>
+ <div className="flex items-center justify-between border-b px-6 py-5 mt-1">
+    <div>
+      <h2 className="text-2xl font-black">URBAN</h2>
+      <p className="text-xs font-bold tracking-[0.35em] text-emerald-600">
+        KICKS
+      </p>
+    </div>
 
-                <div className="flex-1 space-y-6 overflow-y-auto p-6">
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setOpen(false)}
+      className="rounded-full"
+    >
+      <X className="h-6 w-6" />
+    </Button>
+  </div>
+
+
+                <div className="flex-1 space-y-4 overflow-y-auto p-4">
                   {navItems.map((item) =>
                     item.comingSoon ? (
                       <div
@@ -211,7 +222,7 @@ className="fixed top-0 left-0 right-0 z-[60] h-7 lg:h-11 bg-gradient-to-r from-s
                       >
                         {item.name}
                       </Link>
-                    )
+                    ),
                   )}
                 </div>
               </SheetContent>
@@ -239,7 +250,7 @@ className="fixed top-0 left-0 right-0 z-[60] h-7 lg:h-11 bg-gradient-to-r from-s
                 >
                   <ShoppingBag className="size-5" />
                   {totalItems > 0 && (
-                    <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-emerald-600 px-1 text-[10px] font-bold text-white">
+                    <span className="absolute -right-0 top-0 flex h-4 min-w-[17px] items-center justify-center rounded-full bg-emerald-600 px-1 text-[10px] font-bold text-white">
                       {totalItems}
                     </span>
                   )}
@@ -379,7 +390,12 @@ className="fixed top-0 left-0 right-0 z-[60] h-7 lg:h-11 bg-gradient-to-r from-s
                 )}
               </Link>
               <Link to="/profile">
-                <Button variant="ghost" size="icon" aria-label="Profile" className="rounded-full">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Profile"
+                  className="rounded-full"
+                >
                   <User className="size-5" />
                 </Button>
               </Link>
