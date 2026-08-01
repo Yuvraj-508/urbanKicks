@@ -11,7 +11,7 @@ export default function Hero() {
           three of them full-size was a likely cause of the crashing /
           garbled rendering. */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-1/2 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-300/35 blur-[60px] sm:h-[460px] sm:w-[460px] sm:blur-[110px] lg:h-[620px] lg:w-[620px] lg:blur-[170px]" />
+        <div className="absolute left-1/2 top-1/2 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-300/35 blur-[60px] sm:h-[460px] sm:w-[460px] sm:blur-[110px] lg:h-[620px] lg:w-[620px] lg:blur-[100px]" />
 
         <div className="absolute -left-24 top-1/3 hidden h-72 w-72 rounded-full bg-blue-200/20 blur-[80px] sm:block lg:blur-[120px]" />
 
@@ -22,12 +22,12 @@ export default function Hero() {
         <div className="absolute bottom-32 left-1/3 hidden h-2 w-2 rounded-full bg-emerald-500 sm:block" />
       </div>
 
-      <div className="relative mx-auto flex max-w-7xl flex-col-reverse items-center justify-center gap-10 px-4 pt-10 pb-8 sm:min-h-[85vh] sm:px-6 sm:pb-12 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:pt-24">
+      <div className="relative mx-auto flex max-w-7xl flex-col-reverse items-center justify-center gap-10 px-4 pt-10 pb-8 min-h-[85vh] sm:px-6 sm:pb-12 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:pt-24">
         {/* LEFT */}
 
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0  }}
+          animate={{ opacity: 1}}
           transition={{ duration: 0.7 }}
           className="mx-auto max-w-xl text-center lg:mx-0 lg:text-left"
         >
@@ -120,14 +120,16 @@ export default function Hero() {
           <div className="relative animate-float">
             <div className="absolute inset-0 rounded-full bg-emerald-300 blur-[60px] opacity-50 sm:blur-[90px] lg:blur-[120px]" />
 
-            <img
-              src="/images/hero-shoe.webp"
-              alt="Urban Kicks Sneaker"
-              loading="eager"
-              decoding="async"
-              fetchPriority="high"
-              className="relative z-10 mx-auto w-full max-w-[320px] sm:max-w-[450px] md:max-w-[550px] lg:max-w-[720px] xl:max-w-[780px] drop-shadow-[0_40px_60px_rgba(0,0,0,0.30)]"
-            />
+       <img
+  src="/images/hero-shoe.webp"
+  alt="Urban Kicks Sneaker"
+  width="780"
+  height="780"
+  loading="eager"
+  fetchPriority="high"
+  decoding="async"
+  className="relative z-10 mx-auto w-full max-w-[320px] sm:max-w-[450px] md:max-w-[550px] lg:max-w-[720px] xl:max-w-[780px] drop-shadow-[0_40px_60px_rgba(0,0,0,0.30)]"
+/>
 
             {/* Floating Price Card — hidden on small screens, was
                 previously always visible and overlapping content on
