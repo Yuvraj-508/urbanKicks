@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router";
 import { Toaster } from "react-hot-toast";
 
@@ -12,25 +13,24 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import FullPageLoader from "./components/loading/FullPageLoader";
 
 // Customer Pages
-import Home from "./pages/Home";
-import Products from "./pages/Products";
-import ProductDetails from "./pages/ProductDetails";
-import Cart from "./pages/Cart";
-import Checkout from "./pages/Checkout";
+const Home = lazy(() => import("./pages/Home"));
+const Products = lazy(() => import("./pages/Products"));
+const ProductDetails = lazy(() => import("./pages/ProductDetails"));
+const Cart = lazy(() => import("./pages/Cart"));
+const Checkout = lazy(() => import("./pages/Checkout"));
 
 // Seller Pages
-import SellerLogin from "./pages/seller/Auth";
-import Dashboard from "./pages/seller/Dashboard";
-import ProductsPage from "./pages/seller/Products";
-import AddProduct from "./pages/seller/AddProduct";
-import EditProduct from "./pages/seller/EditProduct";
-import ViewProduct from "./pages/seller/ViewProduct";
-import OrdersPage from "./pages/seller/Order";
-import Customers from "./pages/seller/Customer";
-import Analytics from "./pages/seller/Analytics";
-import Settings from "./pages/seller/Setting";
-import Profile from "./pages/Profile";
-import WelcomePopup from "./components/WelcomePopup";
+const SellerLogin = lazy(() => import("./pages/seller/Auth"));
+const Dashboard = lazy(() => import("./pages/seller/Dashboard"));
+const ProductsPage = lazy(() => import("./pages/seller/Products"));
+const AddProduct = lazy(() => import("./pages/seller/AddProduct"));
+const EditProduct = lazy(() => import("./pages/seller/EditProduct"));
+const ViewProduct = lazy(() => import("./pages/seller/ViewProduct"));
+const OrdersPage = lazy(() => import("./pages/seller/Order"));
+const Customers = lazy(() => import("./pages/seller/Customer"));
+const Analytics = lazy(() => import("./pages/seller/Analytics"));
+const Settings = lazy(() => import("./pages/seller/Setting"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 function App() {
   // const [appLoading, setAppLoading] = useState(true);
@@ -69,8 +69,8 @@ function App() {
 
 
 
-      <Routes>
-        {/* Customer Website */}
+<Suspense fallback={<FullPageLoader />}>
+  <Routes>        {/* Customer Website */}
         <Route element={<MainLayout />}>
           <Route index element={<Home />} />
 
@@ -160,6 +160,7 @@ function App() {
           </Route>
         </Route>
       </Routes>
+      </Suspense>
     </>
   );
 }

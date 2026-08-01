@@ -1,13 +1,26 @@
 import { useEffect } from "react";
+import { lazy, Suspense } from "react";
 
 import Hero from "@/components/home/Hero";
 import FlashSale from "@/components/home/FlashSale";
-import Categories from "@/components/home/Categories";
-import TrendingProducts from "@/components/home/TrendingProducts";
-import FeaturedCollection from "@/components/home/FeaturedCollection";
-import WhyChooseUs from "@/components/home/WhyChooseUs";
-import CustomerReviews from "@/components/home/CustomerReviews";
-import Newsletter from "@/components/home/Newsletter";
+const TrendingProducts = lazy(() =>
+  import("@/components/home/TrendingProducts")
+);import FeaturedCollection from "@/components/home/FeaturedCollection";
+const Categories = lazy(() =>
+  import("@/components/home/Categories")
+);
+
+const WhyChooseUs = lazy(() =>
+  import("@/components/home/WhyChooseUs")
+);
+
+const CustomerReviews = lazy(() =>
+  import("@/components/home/CustomerReviews")
+);
+
+const Newsletter = lazy(() =>
+  import("@/components/home/Newsletter")
+);
 
 import useProductStore from "@/store/productStore";
 
@@ -24,15 +37,20 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <TrendingProducts />
+    
       {/* <FlashSale /> */}
-     <section id="categories">
-  <Categories />
-</section>
-      {/* <FeaturedCollection /> */}
-      <WhyChooseUs />
-      <CustomerReviews />
-      <Newsletter  />
+<Suspense fallback={null}>
+    <TrendingProducts />
+  <section id="categories">
+    <Categories />
+  </section>
+
+  <WhyChooseUs />
+
+  <CustomerReviews />
+
+  <Newsletter />
+</Suspense>
     </>
   );
 }
