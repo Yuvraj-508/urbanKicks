@@ -5,28 +5,28 @@ const categories = [
     title: "Sneakers",
     subtitle: "Everyday style",
     image:
-      "/categories/sneakers.webp",
+      "https://res.cloudinary.com/djfqrb4so/image/upload/f_auto,q_auto:eco,c_fill,w_600,h_480/v1785613366/sneakers_bbul3y.webp",
     link: "/all-products?category=sneakers",
   },
   {
     title: "Sports",
     subtitle: "High-performance footwear",
     image:
-      "/categories/sports.webp",
+      "https://res.cloudinary.com/djfqrb4so/image/upload/f_auto/q_auto:low/c_fill,w_500,h_400/v1785613362/sports_rrx50t.webp",
     link: "/all-products?category=sports",
   },
   {
     title: "Boots",
     subtitle: "Rugged & durable",
     image:
-      "/categories/boots.webp",
+      "https://res.cloudinary.com/djfqrb4so/image/upload/f_auto,q_auto:low,c_fill,w_500,h_400/v1785613358/boots_ml4bam.webp",
     link: "/all-products?category=boots",
   },
   {
     title: "Casual",
     subtitle: "Comfort for every day",
     image:
-      "/categories/casual.webp",
+      "https://res.cloudinary.com/djfqrb4so/image/upload/f_auto,q_auto:low,c_fill,w_500,h_400/v1785613349/casual_qnrold.webp",
     link: "/all-products?category=casual",
   },
 ];
