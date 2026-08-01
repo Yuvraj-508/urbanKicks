@@ -30,6 +30,7 @@ import Customers from "./pages/seller/Customer";
 import Analytics from "./pages/seller/Analytics";
 import Settings from "./pages/seller/Setting";
 import Profile from "./pages/Profile";
+import WelcomePopup from "./components/WelcomePopup";
 
 function App() {
   // const [appLoading, setAppLoading] = useState(true);
@@ -65,6 +66,8 @@ function App() {
       />
 
       <ScrollToTop />
+
+
 
       <Routes>
         {/* Customer Website */}

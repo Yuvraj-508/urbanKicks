@@ -1,76 +1,261 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Confetti from "react-confetti";
+import {
+  Sparkles,
+  Footprints,
+  Star,
+  Truck,
+  ShieldCheck,
+  ArrowRight,
+} from "lucide-react";
 
-function WelcomePopup() {
-  const [showPopup, setShowPopup] = useState(false);
-  const navigate = useNavigate();
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPopup(true);
+export default function WelcomePopup() {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [celebrate, setCelebrate] = useState(false);
+
+  const openTimerRef = useRef(null);
+  const closeTimerRef = useRef(null);
+
+  const hour = new Date().getHours();
+
+  const greeting =
+    hour < 12
+      ? "Good Morning"
+      : hour < 18
+      ? "Good Afternoon"
+      : "Good Evening";
+
+
+useEffect(() => {
+  const seen = localStorage.getItem("uk_welcome");
+  const expiry = localStorage.getItem("uk_welcome_expiry");
+
+  // If expired, remove old values
+  if (expiry && Date.now() > Number(expiry)) {
+    localStorage.removeItem("uk_welcome");
+    localStorage.removeItem("uk_welcome_expiry");
+  }
+
+  // Check again after removing expired data
+  const shouldShow = !localStorage.getItem("uk_welcome");
+
+  if (shouldShow) {
+    openTimerRef.current = setTimeout(() => {
+      setOpen(true);
+
+      closeTimerRef.current = setTimeout(() => {
+        finish(false);
+      }, 20000);
     }, 500);
+  }
 
-    const hideTimer = setTimeout(() => {
-      setShowPopup(false);
-    }, 3500);
+  return () => {
+    clearTimeout(openTimerRef.current);
+    clearTimeout(closeTimerRef.current);
+  };
+}, []);
 
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(hideTimer);
-    };
-  }, []);
 
-  if (!showPopup) return null;
+  const stopAutoClose = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+    }
+  };
+
+const finish = (showConfetti = true) => {
+  // Expires after 4 hours
+  const expiryTime = Date.now() + 4 * 60 * 60 * 1000;
+
+  localStorage.setItem("uk_welcome", "true");
+  localStorage.setItem("uk_welcome_expiry", expiryTime.toString());
+
+  if (name.trim()) {
+    localStorage.setItem("uk_user_name", name.trim());
+  }
+
+  if (showConfetti && name.trim()) {
+    setCelebrate(true);
+
+    setTimeout(() => {
+      setCelebrate(false);
+      setOpen(false);
+    }, 2000);
+  } else {
+    setOpen(false);
+  }
+};
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 animate-fadeIn">
-      <div
-        className="relative w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl overflow-hidden
-        animate-[popup_0.5s_ease-out]"
-      >
-        {/* Background Glow */}
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl"></div>
+    <AnimatePresence>
+      {open && (
+        <motion.div>
+          {celebrate && (
+            <Confetti
+              recycle={false}
+              numberOfPieces={280}
+              width={window.innerWidth}
+              height={window.innerHeight}
+              style={{
+                position: "fixed",
+                inset: 0,
+                zIndex: 9999,
+              }}
+            />
+          )}
 
-        {/* Close Button */}
-        <button
-          onClick={() => setShowPopup(false)}
-          className="absolute top-4 right-4 text-gray-400 hover:text-black text-xl"
-        >
-          ×
-        </button>
-
-        {/* Content */}
-        <div className="relative z-10 text-center">
-          <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white text-2xl shadow-lg">
-            👟
-          </div>
-
-          <h2 className="mt-5 text-2xl sm:text-3xl font-bold text-gray-800">
-            Welcome to{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              UrbanKicks
-            </span>
-          </h2>
-
-          <p className="mt-3 text-sm sm:text-base text-gray-500 leading-relaxed">
-            Discover premium sneakers with unmatched style, comfort, and
-            streetwear vibes.
-          </p>
-
-          <button
-            onClick={() => {
-              navigate("/");
-              setShowPopup(false);
-            }}
-            className="mt-6 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium shadow-lg hover:scale-105 transition duration-300"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 p-5 backdrop-blur-md"
           >
-            Explore All
-          </button>
-        </div>
-      </div>
-    </div>
+            <motion.div
+              initial={{
+                opacity: 0,
+                scale: 0.9,
+                y: 40,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0.9,
+                y: 30,
+              }}
+              transition={{
+                duration: 0.35,
+              }}
+              className="relative w-full max-w-lg overflow-hidden rounded-[34px] border border-white/30 bg-white shadow-[0_30px_80px_rgba(0,0,0,0.25)]"
+            >
+              {/* Background */}
+
+              <div className="absolute -left-28 -top-28 h-72 w-72 rounded-full bg-emerald-400/20 blur-[120px]" />
+
+              <div className="absolute -bottom-32 -right-32 h-72 w-72 rounded-full bg-blue-500/20 blur-[120px]" />
+
+              {/* Floating Sneaker */}
+
+              <motion.img
+                src="/images/hero-shoe.png"
+                alt="Sneaker"
+                animate={{
+                  y: [0, -12, 0],
+                  rotate: [-18, -15, -18],
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 4,
+                  ease: "easeInOut",
+                }}
+                className="pointer-events-none absolute -right-12 top-6 w-44 opacity-20 select-none"
+              />
+
+              <div className="relative z-10 p-6 sm:p-8">
+                {/* Logo */}
+
+                <motion.div
+                  animate={{
+                    rotate: [0, -8, 8, -8, 0],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 4,
+                  }}
+                  className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-xl"
+                >
+                  <Sparkles className="h-10 w-10 text-white" />
+                </motion.div>
+
+                <h1 className="mt-6 text-center text-4xl font-black tracking-tight text-slate-900">
+                  URBAN
+                </h1>
+
+                <p className="text-center text-xs font-bold tracking-[0.45em] text-emerald-600">
+                  KICKS
+                </p>
+
+                <motion.h2
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25 }}
+                  className="mt-8 text-center text-3xl font-black text-slate-900"
+                >
+                  {greeting} 👋
+                </motion.h2>
+
+                <p className="mx-auto mt-4 max-w-md text-center leading-7 text-slate-600">
+                  Welcome to <strong>Urban Kicks</strong>.
+                  <br />
+                  Discover premium sneakers designed for athletes,
+                  creators and everyday explorers.
+                </p>
+
+                {/* Input Card */}
+
+                <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                  <div className="mb-4 flex items-center gap-2">
+                    <Footprints className="h-5 w-5 text-emerald-600" />
+
+                    <span className="font-semibold">
+                      What should we call you?
+                    </span>
+                  </div>
+
+                  <Input
+                    value={name}
+                    placeholder="Enter your name..."
+                    className="h-12 rounded-xl border-slate-300 focus-visible:ring-emerald-500"
+                    onFocus={stopAutoClose}
+                    onChange={(e) => {
+                      stopAutoClose();
+                      setName(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        finish();
+                      }
+                    }}
+                  />
+                </div>
+                                {/* Buttons */}
+
+                <div className="mt-8 flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="h-12 flex-1 rounded-xl border-slate-300"
+                    onClick={() => finish(false)}
+                  >
+                    Skip
+                  </Button>
+
+                  <motion.div
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="flex-1"
+                  >
+                    <Button
+                      onClick={() => finish(true)}
+                      className="h-12 w-full rounded-xl bg-emerald-600 font-semibold text-white transition hover:bg-emerald-700"
+                    >
+                      Continue
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+          </motion.div>
+ 
+      )}
+    </AnimatePresence>
   );
 }
-
-export default WelcomePopup;
