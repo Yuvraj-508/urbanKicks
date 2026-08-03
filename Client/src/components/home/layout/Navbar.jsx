@@ -107,13 +107,13 @@ export default function Navbar() {
   return (
     <>
       {/* Announcement */}
-      <div className="fixed top-0 left-0 right-0 z-[60] h-6 lg:h-11 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 border-b border-emerald-900">
+      <div className="fixed top-0 left-0 right-0 z-[60] h-6 lg:h-9 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 border-b border-emerald-900">
         <div className="mx-auto flex h-full max-w-7xl items-center px-3">
           <Megaphone className="mr-3 h-4 w-4 shrink-0 text-emerald-400" />
 
           <div className="relative flex-1 overflow-hidden">
             <div className="flex w-max animate-marquee whitespace-nowrap">
-              <span className="mr-24 text-xs font-medium text-slate-200">
+              <span className="mr-24 text-xs lg:text-[14px] font-medium text-slate-200">
                 <span className="font-bold text-emerald-400">
                   ⚡ Premium UA+ Sneakers
                 </span>{" "}
@@ -124,7 +124,7 @@ export default function Navbar() {
 
               <span
                 aria-hidden
-                className="mr-24 text-xs font-medium text-slate-200"
+                className="mr-24 text-xs lg:text-[14px] font-medium text-slate-200"
               >
                 <span className="font-bold text-emerald-400">
                   ⚡ Premium UA+ Sneakers
