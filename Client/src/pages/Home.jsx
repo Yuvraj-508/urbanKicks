@@ -39,7 +39,6 @@ const fetchTrendingProducts =
   return (
     <>
       <Hero />
-    
       {/* <FlashSale /> */}
 <Suspense fallback={null}>
     <TrendingProducts />

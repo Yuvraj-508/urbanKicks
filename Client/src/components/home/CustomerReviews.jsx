@@ -13,7 +13,7 @@ const reviews = [
   {
     id: 1,
     name: "Rahul Sharma",
-    city: "Delhi",
+    city: "Jammu",
     rating: 5,
     image: Re1,
     review:
@@ -21,8 +21,8 @@ const reviews = [
   },
   {
     id: 2,
-    name: "Priya Verma",
-    city: "Mumbai",
+    name: "Harpreet Singh",
+    city: "Mohali",
     rating: 5,
     image: Re2,
     review:
@@ -30,7 +30,7 @@ const reviews = [
   },
   {
     id: 3,
-    name: "Aman Singh",
+    name: "Aman Verma",
     city: "Chandigarh",
     rating: 5,
     image: Re3,
@@ -39,16 +39,17 @@ const reviews = [
   },
   {
     id: 4,
-    name: "Neha Kapoor",
-    city: "Bengaluru",
+    name: "Rohit Mehta",
+    city: "Jammu",
     rating: 5,
     image: Re4,
-    review: "Stylish, lightweight and extremely comfortable for everyday wear.",
+    review:
+      "Stylish, lightweight and extremely comfortable for everyday wear.",
   },
   {
     id: 5,
-    name: "Rohit Mehta",
-    city: "Jaipur",
+    name: "Karan Thakur",
+    city: "Mohali",
     rating: 5,
     image: Re5,
     review:
@@ -56,11 +57,12 @@ const reviews = [
   },
   {
     id: 6,
-    name: "Anjali Gupta",
-    city: "Pune",
+    name: "Vikram Singh",
+    city: "Chandigarh",
     rating: 5,
     image: Re6,
-    review: "Super comfortable with outstanding support. Highly recommended.",
+    review:
+      "Super comfortable with outstanding support. Highly recommended.",
   },
 ];
 const displayReviews = [...reviews, ...reviews];
