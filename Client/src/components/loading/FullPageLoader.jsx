@@ -6,7 +6,7 @@ export default function FullPageLoader() {
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white">
       <div className="text-center">
         <motion.img
-          src="/images/hero-shoe.png"
+          src="/images/hero-shoe.webp"
           alt="Urban Kicks"
           className="mx-auto w-40 drop-shadow-xl"
           animate={{
