@@ -22,7 +22,7 @@ export default function Hero() {
         <div className="absolute bottom-32 left-1/3 hidden h-2 w-2 rounded-full bg-emerald-500 sm:block" />
       </div>
 
-      <div className="relative mx-auto flex max-w-7xl flex-col-reverse items-center justify-center gap-10 px-4 pt-10 pb-8 min-h-[85vh] sm:px-6 sm:pb-12 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:pt-24">
+      <div className="relative mx-auto flex max-w-7xl flex-col-reverse items-center justify-center gap-10 px-4 pt-10 pb-8 min-h-[80vh] sm:px-6 sm:pb-12 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:pt-24">
         {/* LEFT */}
 
         <motion.div
@@ -84,7 +84,7 @@ export default function Hero() {
 
           {/* Feature Cards */}
 
-          <div className="mt-20 grid grid-cols-3 gap-2 sm:grid-cols-3">
+          <div className="mt-15 grid grid-cols-3 gap-2 sm:grid-cols-3">
             <div className="rounded-2xl border bg-white p-4 shadow-sm">
               <Star className="mx-auto h-6 w-6 fill-yellow-400 text-yellow-400 lg:mx-0" />
               <h4 className="mt-3 font-bold">4.9 Rating</h4>

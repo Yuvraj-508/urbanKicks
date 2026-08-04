@@ -2,18 +2,20 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import VariantCard from "./VariantCard";
 
-const createVariant = () => ({
-  id: crypto.randomUUID(),
+import { v4 as uuidv4 } from "uuid";
 
-color: {
-  name: "",
-  swatches: [
-    {
-      name: "",
-      value: "#000000",
-    },
-  ],
-},
+const createVariant = () => ({
+  id: uuidv4(),
+
+  color: {
+    name: "",
+    swatches: [
+      {
+        name: "",
+        value: "#000000",
+      },
+    ],
+  },
 
   sku: "",
 

@@ -11,6 +11,7 @@ import SellerLayout from "./layout/SellerLayout";
 import ScrollToTop from "./components/ScrollToTop";
 import ProtectedRoute from "./components/ProtectedRoute";
 import FullPageLoader from "./components/loading/FullPageLoader";
+import Review from "./pages/Review";
 
 // Customer Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -64,102 +65,50 @@ function App() {
           duration: 2000,
         }}
       />
-
       <ScrollToTop />
+      <Suspense fallback={<FullPageLoader />}>
+        <Routes>
+          {" "}
+          {/* Customer Website */}
+          <Route element={<MainLayout />}>
+            <Route index element={<Home />} />
 
+            <Route path="/all-products" element={<Products />} />
 
+            <Route path="/products/:id" element={<ProductDetails />} />
 
-<Suspense fallback={<FullPageLoader />}>
-  <Routes>        {/* Customer Website */}
-        <Route element={<MainLayout />}>
-          <Route index element={<Home />} />
+            <Route path="/cart" element={<Cart />} />
 
-          <Route
-            path="/all-products"
-            element={<Products />}
-          />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/rating-card" element={<Review/>} />
 
-          <Route
-            path="/products/:id"
-            element={<ProductDetails />}
-          />
-
-          <Route
-            path="/cart"
-            element={<Cart />}
-          />
-
-          <Route
-            path="/checkout"
-            element={<Checkout />}
-          />
-           <Route
-        path="/profile"
-        element={<Profile/>}
-        />
-        </Route>
-
-       
-
-        {/* Seller Login */}
-        <Route
-          path="/seller/login"
-          element={<SellerLogin />}
-        />
-
-        {/* Protected Seller */}
-        <Route element={<ProtectedRoute />}>
-          <Route
-            path="/seller"
-            element={<SellerLayout />}
-          >
-            <Route
-              index
-              element={<Dashboard />}
-            />
-
-            <Route
-              path="products"
-              element={<ProductsPage />}
-            />
-
-            <Route
-              path="products/add"
-              element={<AddProduct />}
-            />
-
-            <Route
-              path="products/:id"
-              element={<ViewProduct />}
-            />
-
-            <Route
-              path="products/edit/:id"
-              element={<EditProduct />}
-            />
-
-            <Route
-              path="orders"
-              element={<OrdersPage />}
-            />
-
-            <Route
-              path="customers"
-              element={<Customers />}
-            />
-
-            <Route
-              path="analytics"
-              element={<Analytics />}
-            />
-
-            <Route
-              path="settings"
-              element={<Settings />}
-            />
           </Route>
-        </Route>
-      </Routes>
+          {/* Seller Login */}
+          <Route path="/seller/login" element={<SellerLogin />} />
+          {/* Protected Seller */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/seller" element={<SellerLayout />}>
+              <Route index element={<Dashboard />} />
+
+              <Route path="products" element={<ProductsPage />} />
+
+              <Route path="products/add" element={<AddProduct />} />
+
+              <Route path="products/:id" element={<ViewProduct />} />
+
+              <Route path="products/edit/:id" element={<EditProduct />} />
+
+              <Route path="orders" element={<OrdersPage />} />
+
+              <Route path="customers" element={<Customers />} />
+
+              <Route path="analytics" element={<Analytics />} />
+
+              <Route path="settings" element={<Settings />} />
+            </Route>
+          </Route>
+        </Routes>
       </Suspense>
     </>
   );
