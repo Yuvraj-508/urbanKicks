@@ -196,25 +196,84 @@ for (const size of variant.sizes) {
       message: "Product created successfully.",
       product,
     });
-  } catch (error) {
-    // ==========================
-    // Rollback Uploaded Images
-    // ==========================
+} catch (error) {
+  // Rollback uploaded images
+  await Promise.all(
+    uploadedImages.map((publicId) =>
+      cloudinary.uploader.destroy(publicId).catch(() => {})
+    )
+  );
 
-    await Promise.all(
-      uploadedImages.map((publicId) =>
-        cloudinary.uploader.destroy(publicId).catch(() => {})
-      )
-    );
+  console.error("========== ADD PRODUCT ERROR ==========");
+  console.error(error);
+  console.error("=======================================");
 
-    console.error("ADD PRODUCT ERROR");
-    console.error(error);
+  // Multer Errors
+  if (error instanceof multer.MulterError) {
+    const messages = {
+      LIMIT_FILE_SIZE:
+        "One or more images exceed the 5 MB upload limit.",
+      LIMIT_FILE_COUNT:
+        "Too many images uploaded.",
+      LIMIT_UNEXPECTED_FILE:
+        "Unexpected image field received.",
+    };
 
-    return res.status(500).json({
+    return res.status(400).json({
       success: false,
-      message: error.message || "Failed to create product.",
+      code: error.code,
+      message: messages[error.code] || error.message,
     });
   }
+
+  // Mongoose Validation Error
+  if (error instanceof mongoose.Error.ValidationError) {
+    const errors = Object.values(error.errors).map((e) => ({
+      field: e.path,
+      message: e.message,
+    }));
+
+    return res.status(400).json({
+      success: false,
+      message: "Validation failed.",
+      errors,
+    });
+  }
+
+  // Cast Error
+  if (error instanceof mongoose.Error.CastError) {
+    return res.status(400).json({
+      success: false,
+      field: error.path,
+      value: error.value,
+      message: `Invalid value for '${error.path}'.`,
+    });
+  }
+
+  // JSON Parse Error
+  if (error instanceof SyntaxError) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid JSON received from client.",
+    });
+  }
+
+  // Cloudinary Error
+  if (error.http_code || error.name === "Error") {
+    return res.status(500).json({
+      success: false,
+      message:
+        error.message || "Image upload failed.",
+    });
+  }
+
+  // Unknown Error
+  return res.status(500).json({
+    success: false,
+    message:
+      error.message || "Failed to create product.",
+  });
+}
 };
 
 

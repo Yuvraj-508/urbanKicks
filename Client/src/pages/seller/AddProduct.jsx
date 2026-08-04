@@ -75,15 +75,39 @@ for (const [key, value] of formData.entries()) {
       );
 
       navigate("/seller/products");
-    } catch (error) {
-      console.error(error);
+  } catch (error) {
+  console.error("========== UPLOAD ERROR ==========");
+  console.error(error);
 
-      toast.error(
-        error.response?.data?.message ||
-          error.message ||
-          "Something went wrong."
-      );
-    } finally {
+  if (error.response) {
+    console.error("Status:", error.response.status);
+    console.error("Data:", error.response.data);
+  }
+
+  if (error.request) {
+    console.error("Request:", error.request);
+  }
+
+  console.error("Code:", error.code);
+  console.error("Message:", error.message);
+  console.error("==================================");
+
+  const data = error.response?.data;
+
+  if (data?.errors?.length) {
+    toast.error(
+      data.errors
+        .map((e) => `${e.field}: ${e.message}`)
+        .join("\n")
+    );
+  } else {
+    toast.error(
+      data?.message ||
+      error.message ||
+      "Something went wrong."
+    );
+  }
+}finally {
       setLoading(false);
     }
   };
